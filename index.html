@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porti Negócios — Arquitetura do Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #551388;
+    --accent: #6007C1;
+    --accent2: #8B2FC9;
+    --sidebar-bg: #1A0A2E;
+    --bg: #F7F4EF;
+    --text: #111111;
+    --text-muted: #555;
+    --border: rgba(96,7,193,0.15);
+    --glow: rgba(96,7,193,0.3);
+    --card-bg: #ffffff;
+    --tag-bg: rgba(85,19,136,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--sidebar-bg);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(139,47,201,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .header-logo .dot {
+    width: 10px; height: 10px;
+    background: linear-gradient(135deg, #8B2FC9, #6007C1);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--glow);
+  }
+  .header-logo span {
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+  .header-logo small {
+    color: rgba(255,255,255,0.4);
+    font-size: 11px;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .header-badge {
+    background: rgba(139,47,201,0.2);
+    border: 1px solid rgba(139,47,201,0.4);
+    color: #c084fc;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    display: flex;
+    height: calc(100vh - 57px);
+  }
+
+  /* ── CANVAS AREA ── */
+  .canvas {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(85,19,136,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(96,7,193,0.04) 0%, transparent 50%);
+  }
+
+  /* Grid dots */
+  .canvas::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(85,19,136,0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  /* ── SVG CONNECTIONS ── */
+  .connections-svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── NODES ── */
+  .node {
+    position: absolute;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    user-select: none;
+  }
+  .node:hover { transform: translateY(-3px) scale(1.03); }
+  .node.active .node-card {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(96,7,193,0.2), 0 8px 32px rgba(96,7,193,0.25) !important;
+  }
+
+  .node-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    min-width: 130px;
+    text-align: center;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .node-card:hover {
+    border-color: rgba(96,7,193,0.4);
+    box-shadow: 0 4px 24px rgba(96,7,193,0.15);
+  }
+
+  .node-icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+    display: block;
+    line-height: 1;
+  }
+  .node-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    display: block;
+  }
+  .node-sublabel {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* Node variants */
+  .node-core .node-card {
+    background: linear-gradient(135deg, #1A0A2E, #2D1050);
+    border-color: rgba(139,47,201,0.5);
+    min-width: 160px;
+    padding: 18px 22px;
+  }
+  .node-core .node-label { color: #fff; font-size: 14px; }
+  .node-core .node-sublabel { color: rgba(255,255,255,0.5); }
+  .node-core .node-icon { font-size: 36px; }
+
+  .node-api .node-card { border-color: rgba(96,7,193,0.25); }
+  .node-db .node-card { border-color: rgba(16,185,129,0.3); }
+  .node-frontend .node-card { border-color: rgba(59,130,246,0.3); }
+  .node-ai .node-card { border-color: rgba(245,158,11,0.3); }
+  .node-external .node-card { border-color: rgba(156,163,175,0.4); background: #f9f9f9; }
+
+  /* Pulse animation on core node */
+  .node-core .node-card::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 18px;
+    border: 2px solid rgba(139,47,201,0.3);
+    animation: pulse-ring 2.5s ease-out infinite;
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.08); opacity: 0; }
+  }
+
+  /* ── DETAIL PANEL ── */
+  .detail-panel {
+    width: 380px;
+    background: #fff;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 20;
+    overflow: hidden;
+  }
+  .detail-panel.open { transform: translateX(0); }
+
+  .panel-header {
+    background: var(--sidebar-bg);
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .panel-header-info { flex: 1; }
+  .panel-icon { font-size: 32px; margin-bottom: 8px; display: block; }
+  .panel-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .panel-subtitle {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .panel-close {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: rgba(255,255,255,0.7);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .panel-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+  }
+  .panel-body::-webkit-scrollbar { width: 4px; }
+  .panel-body::-webkit-scrollbar-track { background: transparent; }
+  .panel-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .panel-section { margin-bottom: 20px; }
+  .panel-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    gap: 12px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-key {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .info-val {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 600;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    background: var(--tag-bg);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid rgba(85,19,136,0.12);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tag.green { background: rgba(16,185,129,0.08); color: #059669; border-color: rgba(16,185,129,0.2); }
+  .tag.blue { background: rgba(59,130,246,0.08); color: #2563eb; border-color: rgba(59,130,246,0.2); }
+  .tag.amber { background: rgba(245,158,11,0.08); color: #d97706; border-color: rgba(245,158,11,0.2); }
+  .tag.gray { background: rgba(107,114,128,0.08); color: #4b5563; border-color: rgba(107,114,128,0.2); }
+
+  .code-block {
+    background: #0f0720;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #c084fc;
+    line-height: 1.6;
+    overflow-x: auto;
+    border: 1px solid rgba(139,47,201,0.2);
+  }
+  .code-block .kw { color: #818cf8; }
+  .code-block .str { color: #86efac; }
+  .code-block .fn { color: #fbbf24; }
+  .code-block .cm { color: rgba(255,255,255,0.3); }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .metric-card {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .metric-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .metric-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-num {
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .flow-text { font-size: 12px; color: var(--text); line-height: 1.5; }
+  .flow-text strong { color: var(--accent); }
+
+  /* ── LEGEND ── */
+  .legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .legend-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ── HINT ── */
+  .hint {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26,10,46,0.85);
+    backdrop-filter: blur(8px);
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(139,47,201,0.3);
+    pointer-events: none;
+    z-index: 5;
+    white-space: nowrap;
+    transition: opacity 0.5s;
+  }
+  .hint.hidden { opacity: 0; }
+
+  /* ── CONNECTION LABELS ── */
+  .conn-label {
+    font-size: 10px;
+    fill: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .detail-panel { width: 100%; position: absolute; top: 0; right: 0; bottom: 0; }
+    .legend { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">
+    <div class="dot"></div>
+    <span>Porti Negócios <small>v8.2</small></span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span style="font-size:12px;color:rgba(255,255,255,0.4);">Clique em qualquer componente para explorar</span>
+    <span class="header-badge">Arquitetura Interativa</span>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CANVAS -->
+  <div class="canvas" id="canvas">
+
+    <!-- Hint -->
+    <div class="hint" id="hint">👆 Clique em qualquer nó para ver os detalhes</div>
+
+    <!-- SVG Connections -->
+    <svg class="connections-svg" id="connections">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="rgba(96,7,193,0.4)"/>
+        </marker>
+        <marker id="arrow-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="rgba(156,163,175,0.5)"/>
+        </marker>
+        <marker id="arrow-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="rgba(16,185,129,0.5)"/>
+        </marker>
+        <marker id="arrow-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="rgba(245,158,11,0.5)"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <!-- ── NODES ── -->
+
+    <!-- CORE: Porti Negócios Server -->
+    <div class="node node-core" id="node-server" style="left:50%;top:50%;transform:translate(-50%,-50%);" onclick="showDetail('server')">
+      <div class="node-card">
+        <span class="node-icon">⚡</span>
+        <span class="node-label">Porti Negócios</span>
+        <span class="node-sublabel">Express + tRPC Server</span>
+      </div>
+    </div>
+
+    <!-- FRONTEND -->
+    <div class="node node-frontend" id="node-frontend" style="left:12%;top:50%;transform:translateY(-50%);" onclick="showDetail('frontend')">
+      <div class="node-card">
+        <span class="node-icon">🖥️</span>
+        <span class="node-label">Frontend</span>
+        <span class="node-sublabel">React 19 + Tailwind 4</span>
+      </div>
+    </div>
+
+    <!-- DATABASE -->
+    <div class="node node-db" id="node-db" style="left:50%;top:82%;transform:translateX(-50%);" onclick="showDetail('db')">
+      <div class="node-card">
+        <span class="node-icon">🗄️</span>
+        <span class="node-label">MySQL / TiDB</span>
+        <span class="node-sublabel">16 tabelas · 1.078 médicos</span>
+      </div>
+    </div>
+
+    <!-- AUTH -->
+    <div class="node node-api" id="node-auth" style="left:50%;top:10%;transform:translateX(-50%);" onclick="showDetail('auth')">
+      <div class="node-card">
+        <span class="node-icon">🔐</span>
+        <span class="node-label">Auth & API Keys</span>
+        <span class="node-sublabel">Manus OAuth + Bearer</span>
+      </div>
+    </div>
+
+    <!-- SYNC SERVICE -->
+    <div class="node node-api" id="node-sync" style="left:28%;top:20%;transform:translateX(-50%);" onclick="showDetail('sync')">
+      <div class="node-card">
+        <span class="node-icon">🔄</span>
+        <span class="node-label">Sync Service</span>
+        <span class="node-sublabel">787 linhas · 4 fontes</span>
+      </div>
+    </div>
+
+    <!-- AI LAYER -->
+    <div class="node node-ai" id="node-ai" style="left:72%;top:20%;transform:translateX(-50%);" onclick="showDetail('ai')">
+      <div class="node-card">
+        <span class="node-icon">🧠</span>
+        <span class="node-label">IA Avançada</span>
+        <span class="node-sublabel">Text-to-SQL + RAG</span>
+      </div>
+    </div>
+
+    <!-- API REST v1 -->
+    <div class="node node-api" id="node-apiv1" style="left:88%;top:50%;transform:translateY(-50%);" onclick="showDetail('apiv1')">
+      <div class="node-card">
+        <span class="node-icon">🌐</span>
+        <span class="node-label">API REST v1</span>
+        <span class="node-sublabel">10 endpoints públicos</span>
+      </div>
+    </div>
+
+    <!-- EXTERNAL: Porti API -->
+    <div class="node node-external" id="node-porti" style="left:18%;top:8%;transform:translateX(-50%);" onclick="showDetail('porti')">
+      <div class="node-card">
+        <span class="node-icon">💊</span>
+        <span class="node-label">Porti API</span>
+        <span class="node-sublabel">Médicos · CRM · PIX</span>
+      </div>
+    </div>
+
+    <!-- EXTERNAL: Motor API -->
+    <div class="node node-external" id="node-motor" style="left:8%;top:28%;transform:translateX(-50%);" onclick="showDetail('motor')">
+      <div class="node-card">
+        <span class="node-icon">⚙️</span>
+        <span class="node-label">Motor API</span>
+        <span class="node-sublabel">Escalas · Plantões</span>
+      </div>
+    </div>
+
+    <!-- EXTERNAL: Finance API -->
+    <div class="node node-external" id="node-finance" style="left:8%;top:72%;transform:translateX(-50%);" onclick="showDetail('finance')">
+      <div class="node-card">
+        <span class="node-icon">💰</span>
+        <span class="node-label">Finance API</span>
+        <span class="node-sublabel">Contratos · Antecipações</span>
+      </div>
+    </div>
+
+    <!-- EXTERNAL: Medescomplica -->
+    <div class="node node-external" id="node-mdc" style="left:18%;top:90%;transform:translateX(-50%);" onclick="showDetail('mdc')">
+      <div class="node-card">
+        <span class="node-icon">📋</span>
+        <span class="node-label">Medescomplica</span>
+        <span class="node-sublabel">NFs · Produtos</span>
+      </div>
+    </div>
+
+    <!-- EXTERNAL: WhatsApp -->
+    <div class="node node-external" id="node-whatsapp" style="left:88%;top:82%;transform:translateX(-50%);" onclick="showDetail('whatsapp')">
+      <div class="node-card">
+        <span class="node-icon">💬</span>
+        <span class="node-label">WhatsApp Flow</span>
+        <span class="node-sublabel">Lovable · Bearer token</span>
+      </div>
+    </div>
+
+    <!-- STORAGE -->
+    <div class="node node-db" id="node-storage" style="left:72%;top:82%;transform:translateX(-50%);" onclick="showDetail('storage')">
+      <div class="node-card">
+        <span class="node-icon">☁️</span>
+        <span class="node-label">S3 Storage</span>
+        <span class="node-sublabel">Docs RAG · Uploads</span>
+      </div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-title">Legenda</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1A0A2E;"></div>Core Server</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(96,7,193,0.3);border:1px solid rgba(96,7,193,0.5)"></div>Serviços internos</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4)"></div>Banco de dados</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4)"></div>Camada IA</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f3f4f6;border:1px solid #d1d5db"></div>APIs externas</div>
+    </div>
+
+  </div><!-- /canvas -->
+
+  <!-- DETAIL PANEL -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="panel-header" id="panelHeader">
+      <div class="panel-header-info">
+        <span class="panel-icon" id="panelIcon">⚡</span>
+        <div class="panel-title" id="panelTitle">Selecione um componente</div>
+        <div class="panel-subtitle" id="panelSubtitle">Clique em qualquer nó no diagrama</div>
+      </div>
+      <button class="panel-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── DATA ──
+const nodes = {
+  server: {
+    icon: '⚡',
+    title: 'Porti Negócios Server',
+    subtitle: 'Express 4 + tRPC 11 · Node.js 22',
+    sections: [
+      {
+        title: 'Métricas do Sistema',
+        type: 'metrics',
+        data: [
+          { val: '12', label: 'Routers tRPC' },
+          { val: '78+', label: 'Testes Vitest' },
+          { val: '1.078', label: 'Médicos ativos' },
+          { val: '16', label: 'Tabelas MySQL' },
+        ]
+      },
+      {
+        title: 'Stack Principal',
+        type: 'tags',
+        data: ['React 19', 'Express 4', 'tRPC 11', 'TypeScript', 'Tailwind 4', 'Drizzle ORM', 'Vitest', 'Superjson']
+      },
+      {
+        title: 'Routers tRPC',
+        type: 'rows',
+        data: [
+          { key: 'auth', val: 'me · logout · register' },
+          { key: 'medicos', val: 'list · search · perfilCompleto' },
+          { key: 'sync', val: 'triggerSync · syncStatus' },
+          { key: 'ia', val: 'chat · streamChat' },
+          { key: 'iaAnalise', val: 'textToSql · queryHybrid · uploadDoc' },
+          { key: 'finance', val: 'contratos · antecipacoes' },
+          { key: 'plantoes', val: 'list · byMedico · stats' },
+        ]
+      },
+      {
+        title: 'Arquitetura de Pastas',
+        type: 'code',
+        data: `server/
+├── <kw>_core/</kw>       <cm>← infra (OAuth, LLM, env)</cm>
+├── <kw>routers/</kw>     <cm>← 12 routers tRPC</cm>
+├── <kw>services/</kw>    <cm>← syncService, embeddings</cm>
+├── <kw>api/</kw>         <cm>← v1.ts, middleware.ts</cm>
+└── <kw>mysql-client.ts</kw> <cm>← pool singleton</cm>`
+      }
+    ]
+  },
+
+  frontend: {
+    icon: '🖥️',
+    title: 'Frontend React',
+    subtitle: 'React 19 · Vite · Tailwind 4 · shadcn/ui',
+    sections: [
+      {
+        title: 'Páginas (22 no total)',
+        type: 'tags',
+        data: ['Dashboard', 'Médicos', 'Plantões', 'Contratos', 'Relatórios', 'Produtos', 'Completude', 'IA Chat', 'IA Avançada', 'Login', 'Configurações', '+ 11 mais']
+      },
+      {
+        title: 'Design System Portí',
+        type: 'rows',
+        data: [
+          { key: 'Primary', val: '#551388' },
+          { key: 'Accent', val: '#6007C1' },
+          { key: 'Sidebar', val: '#1A0A2E' },
+          { key: 'Background', val: '#F7F4EF' },
+          { key: 'Text', val: '#111111' },
+          { key: 'Fonte', val: 'Inter + JetBrains Mono' },
+        ]
+      },
+      {
+        title: 'Componentes Principais',
+        type: 'tags',
+        data: ['PortiLayout', 'MedicoDrawer', 'AIChatBox', 'SyncStatusBadge', 'SyncIndicator', 'BlueprintBackground', 'DashboardLayout']
+      },
+      {
+        title: 'Padrão de Consumo de Dados',
+        type: 'code',
+        data: `<cm>// Leitura via tRPC</cm>
+<kw>const</kw> { data } = <fn>trpc.medicos.list.useQuery</fn>({
+  page: <str>1</str>, search: <str>""</str>
+});
+
+<cm>// Mutação com invalidação</cm>
+<kw>const</kw> sync = <fn>trpc.sync.triggerSync.useMutation</fn>({
+  onSuccess: () => utils.<fn>invalidate</fn>()
+});`
+      }
+    ]
+  },
+
+  db: {
+    icon: '🗄️',
+    title: 'MySQL / TiDB',
+    subtitle: 'Banco principal · 16 tabelas · pool singleton',
+    sections: [
+      {
+        title: 'Tabelas de Cache (Sync)',
+        type: 'tags',
+        data: ['cached_medicos', 'cached_plantoes', 'cached_contratos', 'cached_antecipacoes', 'cached_relatorios', 'cached_produtos', 'cached_finance_contratos', 'cached_finance_antecipacoes', 'cached_mdc_medicos', 'cached_mdc_nfs']
+      },
+      {
+        title: 'Tabelas do Sistema',
+        type: 'tags',
+        data: ['api_keys', 'sync_logs', 'rag_documents', 'rag_queries_log', 'users (Drizzle/Supabase)']
+      },
+      {
+        title: 'Schema: cached_medicos',
+        type: 'code',
+        data: `<kw>CREATE TABLE</kw> cached_medicos (
+  id         <str>INT AUTO_INCREMENT PRIMARY KEY</str>,
+  cpf        <str>VARCHAR(11) UNIQUE NOT NULL</str>,
+  nome       <str>TEXT</str>,
+  crm        <str>VARCHAR(20)</str>,
+  pix        <str>VARCHAR(100)</str>,
+  status     <str>VARCHAR(20)</str>,
+  fontes     <str>JSON</str>,  <cm>← merge de 4 APIs</cm>
+  extras     <str>JSON</str>,
+  syncedAt   <str>DATETIME DEFAULT NOW()</str>
+);`
+      },
+      {
+        title: 'Estratégia de Upsert',
+        type: 'flow',
+        data: [
+          { num: '1', text: 'Fetch paralelo das 4 APIs externas' },
+          { num: '2', text: 'Normalização do CPF (11 dígitos, zero-padded)' },
+          { num: '3', text: '<strong>INSERT ON DUPLICATE KEY UPDATE</strong> — atômico' },
+          { num: '4', text: 'Campo <strong>fontes[]</strong> consolida todas as origens por CPF' },
+          { num: '5', text: 'syncedAt atualizado a cada ciclo' },
+        ]
+      }
+    ]
+  },
+
+  auth: {
+    icon: '🔐',
+    title: 'Autenticação & Autorização',
+    subtitle: 'Manus OAuth 2.0 + Bearer Token (API Keys)',
+    sections: [
+      {
+        title: 'Dois Mecanismos Paralelos',
+        type: 'rows',
+        data: [
+          { key: 'Sessão Web', val: 'Manus OAuth 2.0' },
+          { key: 'API Pública', val: 'Bearer Token (SHA-256)' },
+          { key: 'Cookie', val: 'HttpOnly · Signed JWT' },
+          { key: 'Hash', val: 'crypto.createHash("sha256")' },
+          { key: 'Scopes', val: 'medicos · plantoes · contratos · sync' },
+        ]
+      },
+      {
+        title: 'Fluxo OAuth (Web)',
+        type: 'flow',
+        data: [
+          { num: '1', text: 'Frontend chama <strong>getLoginUrl()</strong> com origin' },
+          { num: '2', text: 'Redirect para Manus OAuth portal' },
+          { num: '3', text: 'Callback em <strong>/api/oauth/callback</strong>' },
+          { num: '4', text: 'JWT assinado salvo em cookie HttpOnly' },
+          { num: '5', text: '<strong>ctx.user</strong> disponível em protectedProcedure' },
+        ]
+      },
+      {
+        title: 'Validação de API Key',
+        type: 'code',
+        data: `<cm>// middleware.ts</cm>
+<kw>const</kw> hash = crypto
+  .<fn>createHash</fn>(<str>"sha256"</str>)
+  .<fn>update</fn>(rawKey)
+  .<fn>digest</fn>(<str>"hex"</str>);
+
+<kw>const</kw> [row] = <kw>await</kw> pool.<fn>execute</fn>(
+  <str>"SELECT * FROM api_keys WHERE keyHash=? AND active=1"</str>,
+  [hash]
+);`
+      },
+      {
+        title: 'Scopes por Chave',
+        type: 'tags',
+        data: ['medicos', 'plantoes', 'antecipacoes', 'contratos', 'relatorios', 'produtos', 'sync']
+      }
+    ]
+  },
+
+  sync: {
+    icon: '🔄',
+    title: 'Sync Service',
+    subtitle: 'syncService.ts · 787 linhas · 4 fontes externas',
+    sections: [
+      {
+        title: 'Pipeline de Sincronização',
+        type: 'flow',
+        data: [
+          { num: '1', text: '<strong>Fetch paralelo</strong> das 4 APIs com Promise.allSettled' },
+          { num: '2', text: 'Normalização: CPF 11 dígitos, datas UTC, status lowercase' },
+          { num: '3', text: 'Merge por CPF: campo <strong>fontes[]</strong> consolida todas as origens' },
+          { num: '4', text: 'Upsert atômico no MySQL via <strong>INSERT ON DUPLICATE KEY UPDATE</strong>' },
+          { num: '5', text: 'Log em <strong>sync_logs</strong> com duração, contagem e erros' },
+        ]
+      },
+      {
+        title: 'Fontes Sincronizadas',
+        type: 'rows',
+        data: [
+          { key: 'Porti API', val: 'médicos, CRM, PIX, status' },
+          { key: 'Motor API', val: 'escalas, plantões, hospitais' },
+          { key: 'Finance API', val: 'contratos, antecipações' },
+          { key: 'Medescomplica', val: 'NFs, produtos, adesões' },
+        ]
+      },
+      {
+        title: 'Funções Principais',
+        type: 'tags',
+        data: ['syncMedicos()', 'syncPlantoes()', 'syncContratos()', 'syncAntecipacoes()', 'syncRelatorios()', 'syncProdutos()', 'syncAll()']
+      },
+      {
+        title: 'Estrutura fontes[] (JSON)',
+        type: 'code',
+        data: `[
+  { <str>"source"</str>: <str>"porti"</str>, <str>"cpf"</str>: <str>"12345..."</str>,
+    <str>"crm"</str>: <str>"SP-123456"</str>, <str>"pix"</str>: <str>"..."</str> },
+  { <str>"source"</str>: <str>"motor"</str>, <str>"cpf"</str>: <str>"12345..."</str>,
+    <str>"escalaId"</str>: <str>4821</str>, <str>"hospital"</str>: <str>"..."</str> },
+  { <str>"source"</str>: <str>"finance"</str>, <str>"cpf"</str>: <str>"12345..."</str>,
+    <str>"contratoId"</str>: <str>"C-001"</str> }
+]`
+      }
+    ]
+  },
+
+  ai: {
+    icon: '🧠',
+    title: 'Camada IA Avançada',
+    subtitle: 'Text-to-SQL + RAG · Claude 3 · Embeddings',
+    sections: [
+      {
+        title: 'Dois Modos de IA',
+        type: 'rows',
+        data: [
+          { key: 'Text-to-SQL', val: 'Pergunta → SQL → Resultado' },
+          { key: 'RAG', val: 'Pergunta → Busca semântica → Resposta' },
+          { key: 'Modelo', val: 'Claude 3 (Anthropic)' },
+          { key: 'Embeddings', val: 'Anthropic + fallback TF-IDF' },
+          { key: 'Similaridade', val: 'Coseno (vetor 1536d)' },
+          { key: 'Tabelas RAG', val: 'rag_documents · rag_queries_log' },
+        ]
+      },
+      {
+        title: 'Text-to-SQL — Fluxo',
+        type: 'flow',
+        data: [
+          { num: '1', text: 'Usuário digita pergunta em linguagem natural' },
+          { num: '2', text: 'Claude recebe o <strong>schema das tabelas de cache</strong>' },
+          { num: '3', text: 'Claude gera SQL SELECT (sanitizado por <strong>isSqlSafe()</strong>)' },
+          { num: '4', text: 'Query executada no MySQL com <strong>getMysqlPool()</strong>' },
+          { num: '5', text: 'Resultado retornado como tabela + SQL exibido ao usuário' },
+        ]
+      },
+      {
+        title: 'RAG — Fluxo',
+        type: 'flow',
+        data: [
+          { num: '1', text: 'Upload de PDF/TXT/MD/CSV via <strong>/api/rag/upload</strong>' },
+          { num: '2', text: 'Chunking em blocos de 500 tokens com overlap de 50' },
+          { num: '3', text: 'Embedding gerado por chunk e salvo em <strong>rag_documents</strong>' },
+          { num: '4', text: 'Busca por similaridade coseno entre query e chunks' },
+          { num: '5', text: 'Top-K chunks enviados como contexto ao Claude para resposta' },
+        ]
+      },
+      {
+        title: 'Segurança SQL',
+        type: 'code',
+        data: `<cm>// textToSql.ts — isSqlSafe()</cm>
+<kw>const</kw> BLOCKED = [
+  <str>/DROP|DELETE|UPDATE|INSERT/i</str>,
+  <str>/--|\\/\\*/</str>,   <cm>← SQL injection</cm>
+  <str>/UNION.*SELECT/i</str>
+];
+<kw>if</kw> (BLOCKED.<fn>some</fn>(r => r.<fn>test</fn>(sql)))
+  <kw>throw new</kw> Error(<str>"Query não permitida"</str>);`
+      }
+    ]
+  },
+
+  apiv1: {
+    icon: '🌐',
+    title: 'API REST v1',
+    subtitle: 'Express Router · Bearer Auth · 10 endpoints',
+    sections: [
+      {
+        title: 'Endpoints Disponíveis',
+        type: 'rows',
+        data: [
+          { key: 'GET /health', val: 'público · status do servidor' },
+          { key: 'GET /medicos', val: 'lista paginada · filtros' },
+          { key: 'GET /medicos/:cpf', val: 'perfil individual' },
+          { key: 'GET /medicos/:cpf/perfil-completo', val: 'JOIN 4 tabelas' },
+          { key: 'GET /plantoes', val: 'lista · filtro por hospital' },
+          { key: 'GET /contratos', val: 'lista · filtro por status' },
+          { key: 'GET /antecipacoes', val: 'lista · filtro por período' },
+          { key: 'GET /relatorios', val: 'lista de relatórios' },
+          { key: 'GET /produtos', val: 'produtos e adesões' },
+          { key: 'POST /sync', val: 'trigger manual de sync' },
+        ]
+      },
+      {
+        title: 'Autenticação',
+        type: 'code',
+        data: `<cm># Header obrigatório (exceto /health)</cm>
+Authorization: Bearer pk_live_<str>...</str>
+
+<cm># Exemplo curl</cm>
+curl -H <str>"Authorization: Bearer pk_live_..."</str> \\
+  https://porti-dash-avdjpsei.manus.space/<fn>api/v1/medicos</fn>`
+      },
+      {
+        title: 'Rate Limiting',
+        type: 'rows',
+        data: [
+          { key: 'Janela', val: '15 minutos' },
+          { key: 'Limite', val: '100 req / janela / chave' },
+          { key: 'Header', val: 'X-RateLimit-Remaining' },
+          { key: 'Erro', val: '429 Too Many Requests' },
+        ]
+      },
+      {
+        title: 'URL de Produção',
+        type: 'tags',
+        data: ['https://porti-dash-avdjpsei.manus.space/api/v1']
+      }
+    ]
+  },
+
+  porti: {
+    icon: '💊',
+    title: 'Porti API',
+    subtitle: 'API externa principal · Médicos · CRM · PIX',
+    sections: [
+      {
+        title: 'Dados Fornecidos',
+        type: 'tags',
+        data: ['CPF', 'Nome completo', 'CRM', 'UF do CRM', 'Chave PIX', 'Status (ativo/inativo)', 'E-mail', 'Telefone', 'Especialidade']
+      },
+      {
+        title: 'Configuração',
+        type: 'rows',
+        data: [
+          { key: 'Base URL', val: 'PORTI_API_URL (env)' },
+          { key: 'Auth', val: 'Bearer PORTI_API_KEY' },
+          { key: 'Chave ativa', val: 'pk_live_kjXzV-0N...' },
+          { key: 'Scope', val: 'medicos · plantoes · sync' },
+        ]
+      },
+      {
+        title: 'Uso no Sistema',
+        type: 'flow',
+        data: [
+          { num: '1', text: 'syncService.ts chama <strong>GET /medicos</strong> com paginação' },
+          { num: '2', text: 'Dados normalizados e salvos em <strong>cached_medicos</strong>' },
+          { num: '3', text: 'Disponibilizados via tRPC e API REST v1' },
+        ]
+      }
+    ]
+  },
+
+  motor: {
+    icon: '⚙️',
+    title: 'Motor API',
+    subtitle: 'Escalas médicas · Plantões · Hospitais',
+    sections: [
+      {
+        title: 'Dados Fornecidos',
+        type: 'tags',
+        data: ['Escalas', 'Plantões por médico', 'Hospitais', 'Datas de plantão', 'Valor por plantão', 'Status de confirmação']
+      },
+      {
+        title: 'Configuração',
+        type: 'rows',
+        data: [
+          { key: 'Env', val: 'MOTOR_API_URL + MOTOR_API_KEY' },
+          { key: 'Tabela cache', val: 'cached_plantoes' },
+          { key: 'Sync', val: 'syncPlantoes() no syncService' },
+        ]
+      }
+    ]
+  },
+
+  finance: {
+    icon: '💰',
+    title: 'Finance API',
+    subtitle: 'Contratos · Antecipações · Financeiro',
+    sections: [
+      {
+        title: 'Dados Fornecidos',
+        type: 'tags',
+        data: ['Contratos ativos', 'Antecipações', 'Valor antecipado', 'Taxa', 'Status do contrato', 'Vencimento', 'Histórico financeiro']
+      },
+      {
+        title: 'Configuração',
+        type: 'rows',
+        data: [
+          { key: 'Env', val: 'PORTI_FINANCE_API_URL + KEY' },
+          { key: 'Tabelas cache', val: 'cached_contratos · cached_antecipacoes · cached_finance_*' },
+          { key: 'Sync', val: 'syncContratos() + syncAntecipacoes()' },
+        ]
+      }
+    ]
+  },
+
+  mdc: {
+    icon: '📋',
+    title: 'Medescomplica',
+    subtitle: 'Notas Fiscais · Produtos · Adesões',
+    sections: [
+      {
+        title: 'Dados Fornecidos',
+        type: 'tags',
+        data: ['Notas Fiscais (NFs)', 'Produtos contratados', 'Status de adesão', 'Médicos cadastrados', 'Histórico de NFs']
+      },
+      {
+        title: 'Configuração',
+        type: 'rows',
+        data: [
+          { key: 'Env', val: 'MEDESCOMPLICA_API_URL + KEY' },
+          { key: 'Tabelas cache', val: 'cached_mdc_medicos · cached_mdc_nfs · cached_produtos' },
+          { key: 'Sync', val: 'syncProdutos() no syncService' },
+        ]
+      }
+    ]
+  },
+
+  whatsapp: {
+    icon: '💬',
+    title: 'WhatsApp Flow',
+    subtitle: 'Lovable · API REST v1 · Bearer Token',
+    sections: [
+      {
+        title: 'Integração',
+        type: 'rows',
+        data: [
+          { key: 'Plataforma', val: 'Lovable.dev' },
+          { key: 'URL consumida', val: '/api/v1/medicos/:cpf' },
+          { key: 'Auth', val: 'Bearer pk_live_kjXzV-0N...' },
+          { key: 'Scope', val: 'medicos' },
+          { key: 'Domínio', val: 'porti-dash-avdjpsei.manus.space' },
+        ]
+      },
+      {
+        title: 'Fluxo de Uso',
+        type: 'flow',
+        data: [
+          { num: '1', text: 'Usuário envia CPF no WhatsApp' },
+          { num: '2', text: 'Lovable chama <strong>GET /api/v1/medicos/{cpf}</strong>' },
+          { num: '3', text: 'Servidor valida Bearer token (SHA-256)' },
+          { num: '4', text: 'Retorna perfil completo do médico em JSON' },
+          { num: '5', text: 'Lovable formata e exibe no fluxo do WhatsApp' },
+        ]
+      }
+    ]
+  },
+
+  storage: {
+    icon: '☁️',
+    title: 'S3 Storage',
+    subtitle: 'Manus S3 · Documentos RAG · Uploads',
+    sections: [
+      {
+        title: 'Uso no Sistema',
+        type: 'rows',
+        data: [
+          { key: 'Documentos RAG', val: 'PDFs, TXTs, MDs indexados' },
+          { key: 'Helper', val: 'storagePut() / storageGet()' },
+          { key: 'Acesso', val: 'URLs públicas CDN' },
+          { key: 'Metadados', val: 'Salvos em rag_documents (MySQL)' },
+        ]
+      },
+      {
+        title: 'Padrão de Upload',
+        type: 'code',
+        data: `<cm>// server/storage.ts</cm>
+<kw>const</kw> key = <str>\`rag/\${userId}/\${filename}\`</str>;
+<kw>const</kw> { url } = <kw>await</kw> <fn>storagePut</fn>(
+  key,
+  fileBuffer,
+  <str>"application/pdf"</str>
+);
+<cm>// URL pública CDN retornada</cm>`
+      },
+      {
+        title: 'Formatos Suportados (RAG)',
+        type: 'tags',
+        data: ['PDF', 'TXT', 'MD', 'CSV']
+      }
+    ]
+  }
+};
+
+// ── RENDER CONNECTIONS ──
+function renderConnections() {
+  const svg = document.getElementById('connections');
+  const canvas = document.getElementById('canvas');
+  const cw = canvas.offsetWidth;
+  const ch = canvas.offsetHeight;
+
+  const getCenter = (id) => {
+    const el = document.getElementById('node-' + id);
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    return {
+      x: rect.left - canvasRect.left + rect.width / 2,
+      y: rect.top - canvasRect.top + rect.height / 2
+    };
+  };
+
+  const connections = [
+    // Core ↔ Frontend
+    { from: 'server', to: 'frontend', color: 'rgba(96,7,193,0.35)', label: 'tRPC', dashed: false },
+    // Core ↔ DB
+    { from: 'server', to: 'db', color: 'rgba(16,185,129,0.4)', label: 'MySQL pool', dashed: false },
+    // Core ↔ Auth
+    { from: 'server', to: 'auth', color: 'rgba(96,7,193,0.35)', label: 'OAuth', dashed: false },
+    // Core ↔ Sync
+    { from: 'server', to: 'sync', color: 'rgba(96,7,193,0.35)', label: '', dashed: false },
+    // Core ↔ AI
+    { from: 'server', to: 'ai', color: 'rgba(245,158,11,0.4)', label: 'Claude', dashed: false },
+    // Core ↔ API v1
+    { from: 'server', to: 'apiv1', color: 'rgba(96,7,193,0.35)', label: 'REST', dashed: false },
+    // Sync ↔ External APIs
+    { from: 'sync', to: 'porti', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
+    { from: 'sync', to: 'motor', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
+    { from: 'sync', to: 'finance', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
+    { from: 'sync', to: 'mdc', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
+    // API v1 ↔ WhatsApp
+    { from: 'apiv1', to: 'whatsapp', color: 'rgba(156,163,175,0.4)', label: 'Bearer', dashed: true },
+    // AI ↔ Storage
+    { from: 'ai', to: 'storage', color: 'rgba(245,158,11,0.3)', label: 'RAG docs', dashed: true },
+    // DB ↔ Storage (metadata)
+    { from: 'db', to: 'storage', color: 'rgba(16,185,129,0.3)', label: '', dashed: true },
+  ];
+
+  let svgContent = '';
+  connections.forEach(conn => {
+    const from = getCenter(conn.from);
+    const to = getCenter(conn.to);
+    if (!from || !to) return;
+
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const mx = from.x + dx * 0.5;
+    const my = from.y + dy * 0.5;
+
+    // Curved path
+    const cx1 = from.x + dx * 0.3;
+    const cy1 = from.y;
+    const cx2 = to.x - dx * 0.3;
+    const cy2 = to.y;
+
+    const dash = conn.dashed ? 'stroke-dasharray="6,4"' : '';
+    const marker = conn.dashed ? 'marker-end="url(#arrow-gray)"' : 'marker-end="url(#arrow)"';
+
+    svgContent += `<path d="M${from.x},${from.y} C${cx1},${cy1} ${cx2},${cy2} ${to.x},${to.y}" 
+      fill="none" stroke="${conn.color}" stroke-width="1.5" ${dash} ${marker}/>`;
+
+    if (conn.label) {
+      svgContent += `<text x="${mx}" y="${my - 6}" text-anchor="middle" class="conn-label" fill="${conn.color}">${conn.label}</text>`;
+    }
+  });
+
+  svg.innerHTML = svg.innerHTML.split('</defs>')[0] + '</defs>' + svgContent;
+}
+
+// ── SHOW DETAIL ──
+function showDetail(nodeId) {
+  const data = nodes[nodeId];
+  if (!data) return;
+
+  // Hide hint
+  document.getElementById('hint').classList.add('hidden');
+
+  // Update active node
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+  document.getElementById('node-' + nodeId)?.classList.add('active');
+
+  // Update panel header
+  document.getElementById('panelIcon').textContent = data.icon;
+  document.getElementById('panelTitle').textContent = data.title;
+  document.getElementById('panelSubtitle').textContent = data.subtitle;
+
+  // Render sections
+  let html = '';
+  data.sections.forEach(section => {
+    html += `<div class="panel-section">`;
+    html += `<div class="panel-section-title">${section.title}</div>`;
+
+    if (section.type === 'metrics') {
+      html += `<div class="metric-grid">`;
+      section.data.forEach(m => {
+        html += `<div class="metric-card"><span class="metric-val">${m.val}</span><div class="metric-label">${m.label}</div></div>`;
+      });
+      html += `</div>`;
+    }
+
+    else if (section.type === 'tags') {
+      html += `<div class="tag-list">`;
+      section.data.forEach(t => {
+        const cls = t.startsWith('http') ? 'blue' : '';
+        html += `<span class="tag ${cls}">${t}</span>`;
+      });
+      html += `</div>`;
+    }
+
+    else if (section.type === 'rows') {
+      section.data.forEach(row => {
+        html += `<div class="info-row"><span class="info-key">${row.key}</span><span class="info-val">${row.val}</span></div>`;
+      });
+    }
+
+    else if (section.type === 'code') {
+      const formatted = section.data
+        .replace(/<kw>/g, '<span class="kw">').replace(/<\/kw>/g, '</span>')
+        .replace(/<str>/g, '<span class="str">').replace(/<\/str>/g, '</span>')
+        .replace(/<fn>/g, '<span class="fn">').replace(/<\/fn>/g, '</span>')
+        .replace(/<cm>/g, '<span class="cm">').replace(/<\/cm>/g, '</span>');
+      html += `<div class="code-block">${formatted}</div>`;
+    }
+
+    else if (section.type === 'flow') {
+      section.data.forEach(step => {
+        html += `<div class="flow-step"><div class="flow-num">${step.num}</div><div class="flow-text">${step.text}</div></div>`;
+      });
+    }
+
+    html += `</div>`;
+  });
+
+  document.getElementById('panelBody').innerHTML = html;
+
+  // Open panel
+  document.getElementById('detailPanel').classList.add('open');
+
+  // Re-render connections after panel opens
+  setTimeout(renderConnections, 320);
+}
+
+function closePanel() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+  setTimeout(renderConnections, 320);
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  setTimeout(renderConnections, 100);
+});
+window.addEventListener('resize', renderConnections);
+</script>
+</body>
+</html>
