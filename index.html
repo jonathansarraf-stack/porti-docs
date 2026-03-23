@@ -30,7 +30,7 @@
       --porti-green:      #4ADE80;
       --porti-amber:      #FCD34D;
       --porti-red:        #F87171;
-      --sidebar-width:    280px;
+      --sidebar-width:    260px;
       --header-height:    64px;
     }
 
@@ -195,7 +195,7 @@
     /* ── HERO ── */
     .hero {
       background: linear-gradient(135deg, var(--porti-sidebar) 0%, #0F0720 50%, #1A0A2E 100%);
-      padding: 80px 64px 64px;
+      padding: 96px 80px 72px;
       position: relative;
       overflow: hidden;
     }
@@ -216,7 +216,7 @@
     }
     .hero-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 52px; font-weight: 800;
+      font-size: 60px; font-weight: 800;
       color: #F7F4EF;
       letter-spacing: -1.5px;
       line-height: 1.05;
@@ -229,15 +229,15 @@
       background-clip: text;
     }
     .hero-desc {
-      font-size: 17px;
+      font-size: 18px;
       color: #8B7AA8;
-      max-width: 640px;
+      max-width: 700px;
       line-height: 1.7;
       margin-bottom: 36px;
     }
     .hero-stats {
       display: flex;
-      gap: 48px;
+      gap: 56px;
       flex-wrap: wrap;
     }
     .hero-stat {
@@ -247,7 +247,7 @@
     }
     .hero-stat-num {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 36px; font-weight: 800;
+      font-size: 42px; font-weight: 800;
       color: var(--porti-accent-2);
       line-height: 1;
     }
@@ -273,7 +273,7 @@
 
     /* ── SECTION ── */
     .section {
-      padding: 64px 64px 48px;
+      padding: 72px 80px 60px;
       border-bottom: 1px solid rgba(96, 7, 193, 0.1);
     }
     .section:last-child { border-bottom: none; }
@@ -286,7 +286,7 @@
       display: flex;
       align-items: flex-start;
       gap: 20px;
-      margin-bottom: 40px;
+      margin-bottom: 48px;
     }
     .section-num {
       font-family: 'JetBrains Mono', monospace;
@@ -301,47 +301,47 @@
     .section-title-group { flex: 1; }
     .section-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 30px; font-weight: 700;
+      font-size: 34px; font-weight: 700;
       color: var(--porti-text);
       letter-spacing: -0.5px;
       line-height: 1.2;
     }
     .section-dark .section-title { color: #F7F4EF; }
     .section-subtitle {
-      font-size: 15px;
+      font-size: 16px;
       color: var(--porti-text-3);
-      margin-top: 8px;
+      margin-top: 10px;
       line-height: 1.6;
     }
     .section-dark .section-subtitle { color: #8B7AA8; }
 
     /* ── GRID LAYOUTS ── */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
 
     /* ── CARDS ── */
     .card {
       background: #fff;
       border: 1px solid var(--porti-border);
-      padding: 24px;
+      padding: 28px 32px;
     }
     .card-dark {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(155, 109, 255, 0.15);
-      padding: 24px;
+      padding: 28px 32px;
     }
     .card-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px; font-weight: 600;
+      font-size: 17px; font-weight: 600;
       color: var(--porti-text);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .card-dark .card-title { color: #E9E3FF; }
     .card-desc {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--porti-text-3);
-      line-height: 1.6;
+      line-height: 1.7;
     }
     .card-dark .card-desc { color: #8B7AA8; }
 
@@ -349,24 +349,24 @@
     .code-block {
       background: var(--porti-code-bg);
       border: 1px solid rgba(155, 109, 255, 0.2);
-      padding: 20px 24px;
+      padding: 28px 32px;
       overflow-x: auto;
       position: relative;
     }
     .code-block pre {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12.5px;
+      font-size: 13.5px;
       color: #C4B5FD;
-      line-height: 1.8;
+      line-height: 1.9;
       white-space: pre;
     }
     .code-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 11px;
       color: #4B3A6B;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .hl-purple { color: #9B6DFF; }
     .hl-green  { color: #4ADE80; }
@@ -380,22 +380,22 @@
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
+      font-size: 14px;
     }
     .data-table th {
       background: var(--porti-sidebar);
       color: var(--porti-accent-2);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      padding: 10px 16px;
+      padding: 14px 20px;
       text-align: left;
       border-bottom: 2px solid rgba(155, 109, 255, 0.3);
     }
     .data-table td {
-      padding: 10px 16px;
+      padding: 14px 20px;
       border-bottom: 1px solid rgba(96, 7, 193, 0.08);
       color: var(--porti-text-2);
       vertical-align: top;
@@ -429,10 +429,10 @@
     }
     .pipeline-step {
       flex: 1;
-      min-width: 160px;
+      min-width: 180px;
       background: rgba(96, 7, 193, 0.06);
       border: 1px solid rgba(96, 7, 193, 0.15);
-      padding: 20px 16px;
+      padding: 24px 20px;
       position: relative;
     }
     .pipeline-step::after {
@@ -454,15 +454,15 @@
     }
     .pipeline-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 13px; font-weight: 700;
+      font-size: 15px; font-weight: 700;
       color: var(--porti-text);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .pipeline-items {
       list-style: none;
-      font-size: 11.5px;
+      font-size: 13px;
       color: var(--porti-text-3);
-      line-height: 1.7;
+      line-height: 1.8;
     }
     .pipeline-items li::before {
       content: '·';
@@ -471,7 +471,7 @@
     }
 
     /* ── ENV VARS ── */
-    .env-group { margin-bottom: 32px; }
+    .env-group { margin-bottom: 40px; }
     .env-group-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px; font-weight: 600;
@@ -486,7 +486,7 @@
       display: flex;
       align-items: flex-start;
       gap: 16px;
-      padding: 10px 0;
+      padding: 14px 0;
       border-bottom: 1px solid rgba(96, 7, 193, 0.07);
     }
     .env-row:last-child { border-bottom: none; }
