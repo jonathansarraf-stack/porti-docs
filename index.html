@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porti Negócios — Documentação Técnica v8.2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM PORTÍ — v8.2
+       Paleta: #551388 (primary) · #6007C1 (accent) · #1A0A2E (sidebar)
+                #F7F4EF (background) · #111111 (text) · #9B6DFF (highlight)
+    ============================================================ */
+    :root {
+      --porti-primary:    #551388;
+      --porti-accent:     #6007C1;
+      --porti-accent-2:   #9B6DFF;
+      --porti-accent-3:   #C084FC;
+      --porti-sidebar:    #1A0A2E;
+      --porti-sidebar-2:  #0F0720;
+      --porti-bg:         #F7F4EF;
+      --porti-bg-2:       #EDE9E2;
+      --porti-text:       #111111;
+      --porti-text-2:     #3D3550;
+      --porti-text-3:     #6B5A8A;
+      --porti-border:     rgba(96, 7, 193, 0.15);
+      --porti-code-bg:    #1E0D3E;
+      --porti-green:      #4ADE80;
+      --porti-amber:      #FCD34D;
+      --porti-red:        #F87171;
+      --sidebar-width:    280px;
+      --header-height:    64px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--porti-bg);
+      color: var(--porti-text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--porti-bg-2); }
+    ::-webkit-scrollbar-thumb { background: var(--porti-accent); border-radius: 3px; }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-height);
+      background: var(--porti-sidebar-2);
+      border-bottom: 1px solid rgba(155, 109, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px 0 calc(var(--sidebar-width) + 24px);
+      z-index: 100;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--porti-primary), var(--porti-accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px; font-weight: 700;
+      color: #F7F4EF;
+    }
+    .header-version {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 500;
+      color: var(--porti-accent-2);
+      background: rgba(96, 7, 193, 0.2);
+      border: 1px solid rgba(96, 7, 193, 0.4);
+      padding: 3px 10px;
+      letter-spacing: 0.08em;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .header-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--porti-green);
+      background: rgba(74, 222, 128, 0.1);
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      padding: 3px 10px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, var(--porti-sidebar) 0%, var(--porti-sidebar-2) 100%);
+      border-right: 1px solid rgba(155, 109, 255, 0.15);
+      overflow-y: auto;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-brand {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(155, 109, 255, 0.15);
+    }
+    .sidebar-brand-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px; font-weight: 800;
+      color: #F7F4EF;
+      letter-spacing: -0.5px;
+    }
+    .sidebar-brand-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--porti-accent-2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    .sidebar-nav { flex: 1; padding: 12px 0; }
+    .nav-section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; font-weight: 600;
+      color: #4B3A6B;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 12px 20px 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      text-decoration: none;
+      color: #8B7AA8;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color 0.15s, background 0.15s;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+    }
+    .nav-item:hover {
+      color: #C4B5FD;
+      background: rgba(155, 109, 255, 0.06);
+    }
+    .nav-item.active {
+      color: #C4B5FD;
+      background: rgba(96, 7, 193, 0.15);
+      border-left-color: var(--porti-accent-2);
+    }
+    .nav-item-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #3D2A5A;
+      min-width: 20px;
+    }
+    .nav-item.active .nav-item-num { color: var(--porti-accent-2); }
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(155, 109, 255, 0.1);
+    }
+    .sidebar-footer-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #3D2A5A;
+      line-height: 1.6;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      padding-top: var(--header-height);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--porti-sidebar) 0%, #0F0720 50%, #1A0A2E 100%);
+      padding: 80px 64px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(155, 109, 255, 0.05) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 500;
+      color: var(--porti-accent-2);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 52px; font-weight: 800;
+      color: #F7F4EF;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--porti-accent-2) 0%, var(--porti-accent-3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 17px;
+      color: #8B7AA8;
+      max-width: 640px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px; font-weight: 800;
+      color: var(--porti-accent-2);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      color: #6B5A8A;
+      letter-spacing: 0.05em;
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 32px;
+    }
+    .hero-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #C4B5FD;
+      background: rgba(96, 7, 193, 0.2);
+      border: 1px solid rgba(96, 7, 193, 0.35);
+      padding: 4px 12px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      padding: 64px 64px 48px;
+      border-bottom: 1px solid rgba(96, 7, 193, 0.1);
+    }
+    .section:last-child { border-bottom: none; }
+    .section-alt { background: rgba(96, 7, 193, 0.02); }
+    .section-dark {
+      background: var(--porti-sidebar-2);
+      color: #F7F4EF;
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      color: var(--porti-accent);
+      background: rgba(96, 7, 193, 0.1);
+      border: 1px solid rgba(96, 7, 193, 0.25);
+      padding: 4px 10px;
+      white-space: nowrap;
+      margin-top: 6px;
+    }
+    .section-title-group { flex: 1; }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 30px; font-weight: 700;
+      color: var(--porti-text);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+    .section-dark .section-title { color: #F7F4EF; }
+    .section-subtitle {
+      font-size: 15px;
+      color: var(--porti-text-3);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+    .section-dark .section-subtitle { color: #8B7AA8; }
+
+    /* ── GRID LAYOUTS ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--porti-border);
+      padding: 24px;
+    }
+    .card-dark {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(155, 109, 255, 0.15);
+      padding: 24px;
+    }
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px; font-weight: 600;
+      color: var(--porti-text);
+      margin-bottom: 8px;
+    }
+    .card-dark .card-title { color: #E9E3FF; }
+    .card-desc {
+      font-size: 13px;
+      color: var(--porti-text-3);
+      line-height: 1.6;
+    }
+    .card-dark .card-desc { color: #8B7AA8; }
+
+    /* ── CODE BLOCKS ── */
+    .code-block {
+      background: var(--porti-code-bg);
+      border: 1px solid rgba(155, 109, 255, 0.2);
+      padding: 20px 24px;
+      overflow-x: auto;
+      position: relative;
+    }
+    .code-block pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: #C4B5FD;
+      line-height: 1.8;
+      white-space: pre;
+    }
+    .code-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #4B3A6B;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .hl-purple { color: #9B6DFF; }
+    .hl-green  { color: #4ADE80; }
+    .hl-amber  { color: #FCD34D; }
+    .hl-red    { color: #F87171; }
+    .hl-blue   { color: #60A5FA; }
+    .hl-gray   { color: #4B3A6B; }
+    .hl-white  { color: #F7F4EF; }
+
+    /* ── TABLES ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: var(--porti-sidebar);
+      color: var(--porti-accent-2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 2px solid rgba(155, 109, 255, 0.3);
+    }
+    .data-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(96, 7, 193, 0.08);
+      color: var(--porti-text-2);
+      vertical-align: top;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(96, 7, 193, 0.03); }
+    .data-table .mono-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--porti-accent);
+    }
+    .data-table .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      display: inline-block;
+    }
+    .badge-get  { background: rgba(74,222,128,0.12); color: #4ADE80; border: 1px solid rgba(74,222,128,0.25); }
+    .badge-post { background: rgba(252,211,77,0.12); color: #FCD34D; border: 1px solid rgba(252,211,77,0.25); }
+    .badge-del  { background: rgba(248,113,113,0.12); color: #F87171; border: 1px solid rgba(248,113,113,0.25); }
+    .badge-pub  { background: rgba(96,165,250,0.12); color: #60A5FA; border: 1px solid rgba(96,165,250,0.25); }
+    .badge-prot { background: rgba(155,109,255,0.12); color: #9B6DFF; border: 1px solid rgba(155,109,255,0.25); }
+    .badge-ok   { background: rgba(74,222,128,0.12); color: #4ADE80; border: 1px solid rgba(74,222,128,0.25); }
+
+    /* ── FLOW PIPELINE ── */
+    .pipeline {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .pipeline-step {
+      flex: 1;
+      min-width: 160px;
+      background: rgba(96, 7, 193, 0.06);
+      border: 1px solid rgba(96, 7, 193, 0.15);
+      padding: 20px 16px;
+      position: relative;
+    }
+    .pipeline-step::after {
+      content: '→';
+      position: absolute;
+      right: -16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--porti-accent-2);
+      font-size: 18px;
+      font-weight: 700;
+      z-index: 1;
+    }
+    .pipeline-step:last-child::after { display: none; }
+    .pipeline-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--porti-accent-2);
+      margin-bottom: 6px;
+    }
+    .pipeline-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--porti-text);
+      margin-bottom: 8px;
+    }
+    .pipeline-items {
+      list-style: none;
+      font-size: 11.5px;
+      color: var(--porti-text-3);
+      line-height: 1.7;
+    }
+    .pipeline-items li::before {
+      content: '·';
+      color: var(--porti-accent-2);
+      margin-right: 6px;
+    }
+
+    /* ── ENV VARS ── */
+    .env-group { margin-bottom: 32px; }
+    .env-group-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      color: var(--porti-accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--porti-accent);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+    .env-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(96, 7, 193, 0.07);
+    }
+    .env-row:last-child { border-bottom: none; }
+    .env-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 600;
+      color: var(--porti-accent);
+      background: rgba(96, 7, 193, 0.07);
+      padding: 3px 10px;
+      white-space: nowrap;
+      min-width: 240px;
+    }
+    .env-desc {
+      font-size: 13px;
+      color: var(--porti-text-2);
+      line-height: 1.5;
+    }
+    .env-desc strong { color: var(--porti-text); font-weight: 600; }
+
+    /* ── SCOPE TAGS ── */
+    .scope-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .scope-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 500;
+      color: #C4B5FD;
+      background: rgba(96, 7, 193, 0.12);
+      border: 1px solid rgba(96, 7, 193, 0.25);
+      padding: 5px 14px;
+    }
+
+    /* ── STACK TAGS ── */
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stack-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--porti-accent-2);
+      background: rgba(96, 7, 193, 0.08);
+      border: 1px solid rgba(96, 7, 193, 0.2);
+      padding: 5px 14px;
+    }
+
+    /* ── ROADMAP ── */
+    .roadmap-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    .roadmap-horizon { display: flex; flex-direction: column; }
+    .roadmap-header {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .roadmap-header.h1 { background: linear-gradient(135deg, #1E0A3C, #2D1060); border-top: 3px solid var(--porti-accent); }
+    .roadmap-header.h2 { background: linear-gradient(135deg, #1A0A30, #2A0D50); border-top: 3px solid var(--porti-accent-2); }
+    .roadmap-header.h3 { background: linear-gradient(135deg, #150828, #220A44); border-top: 3px solid var(--porti-accent-3); }
+    .roadmap-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      padding: 3px 8px;
+      letter-spacing: 0.08em;
+    }
+    .roadmap-badge.h1 { background: rgba(96,7,193,0.3); color: #A78BFA; }
+    .roadmap-badge.h2 { background: rgba(155,109,255,0.2); color: #C4B5FD; }
+    .roadmap-badge.h3 { background: rgba(192,132,252,0.15); color: #DDD6FE; }
+    .roadmap-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: #F7F4EF; }
+    .roadmap-period { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #6B7280; margin-left: auto; }
+    .roadmap-items { background: rgba(255,255,255,0.02); flex: 1; }
+    .roadmap-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .roadmap-item:last-child { border-bottom: none; }
+    .roadmap-idx { font-family: 'JetBrains Mono', monospace; font-size: 11px; min-width: 20px; margin-top: 1px; }
+    .roadmap-idx.h1 { color: var(--porti-accent); }
+    .roadmap-idx.h2 { color: var(--porti-accent-2); }
+    .roadmap-idx.h3 { color: var(--porti-accent-3); }
+    .roadmap-item-title { font-size: 13px; font-weight: 600; color: #E9E3FF; line-height: 1.3; }
+    .roadmap-item-desc { font-size: 11.5px; color: #6B7280; line-height: 1.4; margin-top: 2px; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, var(--porti-accent), rgba(96,7,193,0.1) 60%, transparent);
+      margin: 32px 0;
+    }
+
+    /* ── INLINE CODE ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--porti-accent);
+      background: rgba(96, 7, 193, 0.08);
+      padding: 1px 6px;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: rgba(96, 7, 193, 0.06);
+      border-left: 3px solid var(--porti-accent);
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: var(--porti-text-2);
+      line-height: 1.6;
+    }
+    .callout strong { color: var(--porti-text); }
+    .callout-warn {
+      background: rgba(252, 211, 77, 0.06);
+      border-left-color: var(--porti-amber);
+    }
+    .callout-success {
+      background: rgba(74, 222, 128, 0.06);
+      border-left-color: var(--porti-green);
+    }
+
+    /* ── STAT ROW ── */
+    .stat-row {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--porti-border);
+      overflow: hidden;
+    }
+    .stat-item {
+      flex: 1;
+      padding: 24px 20px;
+      text-align: center;
+      border-right: 1px solid var(--porti-border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px; font-weight: 800;
+      color: var(--porti-accent);
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--porti-text-3);
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* ── BACK TO TOP ── */
+    .back-to-top {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      width: 44px; height: 44px;
+      background: var(--porti-accent);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .back-to-top.visible { opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      :root { --sidebar-width: 0px; }
+      .sidebar { transform: translateX(-280px); }
+      .site-header { padding-left: 24px; }
+      .hero, .section { padding-left: 32px; padding-right: 32px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .roadmap-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================ SIDEBAR ============================================================ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-brand-name">Porti Negócios</div>
+    <div class="sidebar-brand-sub">Documentação Técnica · v8.2</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Visão Geral</div>
+    <a class="nav-item active" href="#overview"><span class="nav-item-num">01</span>Visão Geral</a>
+    <a class="nav-item" href="#stack"><span class="nav-item-num">02</span>Stack Tecnológico</a>
+    <a class="nav-item" href="#estrutura"><span class="nav-item-num">03</span>Estrutura de Arquivos</a>
+
+    <div class="nav-section-label">Dados & Backend</div>
+    <a class="nav-item" href="#banco"><span class="nav-item-num">04</span>Banco de Dados</a>
+    <a class="nav-item" href="#sync"><span class="nav-item-num">05</span>Pipeline de Sync</a>
+    <a class="nav-item" href="#trpc"><span class="nav-item-num">06</span>tRPC Procedures</a>
+
+    <div class="nav-section-label">APIs & Segurança</div>
+    <a class="nav-item" href="#api-rest"><span class="nav-item-num">07</span>API REST v1</a>
+    <a class="nav-item" href="#auth"><span class="nav-item-num">08</span>Autenticação</a>
+    <a class="nav-item" href="#seguranca"><span class="nav-item-num">09</span>Segurança</a>
+
+    <div class="nav-section-label">IA & Frontend</div>
+    <a class="nav-item" href="#ia"><span class="nav-item-num">10</span>IA Avançada (RAG + SQL)</a>
+    <a class="nav-item" href="#frontend"><span class="nav-item-num">11</span>Frontend</a>
+
+    <div class="nav-section-label">Infra & Evolução</div>
+    <a class="nav-item" href="#env"><span class="nav-item-num">12</span>Variáveis de Ambiente</a>
+    <a class="nav-item" href="#deploy"><span class="nav-item-num">13</span>Deploy & Infra</a>
+    <a class="nav-item" href="#testes"><span class="nav-item-num">14</span>Testes</a>
+    <a class="nav-item" href="#roadmap"><span class="nav-item-num">15</span>Roadmap</a>
+    <a class="nav-item" href="#referencias"><span class="nav-item-num">16</span>Referências</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-text">
+      Porti Negócios · v8.2<br>
+      Março 2026<br>
+      jonathansouzasarraf@gmail.com
+    </div>
+  </div>
+</aside>
+
+<!-- ============================================================ HEADER ============================================================ -->
+<header class="site-header">
+  <div class="header-logo">
+    <div class="header-logo-mark">PN</div>
+    <span class="header-title">Manual Técnico de Arquitetura</span>
+  </div>
+  <div class="header-meta">
+    <span class="header-badge">● PRODUÇÃO ATIVA</span>
+    <span class="header-version">v8.2 · MARÇO 2026</span>
+  </div>
+</header>
+
+<!-- ============================================================ MAIN ============================================================ -->
+<main class="main-content">
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="overview">
+    <div class="hero-eyebrow">Documentação Técnica Completa</div>
+    <h1 class="hero-title">Porti <span>Negócios</span></h1>
+    <p class="hero-desc">
+      Sistema full-stack de gestão operacional para a vertical de saúde da Portí Fintech. Centraliza dados de médicos, plantões, antecipações, contratos e produtos em uma plataforma unificada com IA analítica integrada.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num">1.078</span>
+        <span class="hero-stat-label">médicos ativos</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">16</span>
+        <span class="hero-stat-label">tabelas MySQL</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">12</span>
+        <span class="hero-stat-label">routers tRPC</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">~78</span>
+        <span class="hero-stat-label">testes Vitest</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">0</span>
+        <span class="hero-stat-label">erros TypeScript</span>
+      </div>
+    </div>
+    <div class="hero-tags">
+      <span class="hero-tag">Node.js 22</span>
+      <span class="hero-tag">TypeScript 5</span>
+      <span class="hero-tag">React 19</span>
+      <span class="hero-tag">tRPC 11</span>
+      <span class="hero-tag">Express 4</span>
+      <span class="hero-tag">Drizzle ORM</span>
+      <span class="hero-tag">TiDB Cloud</span>
+      <span class="hero-tag">Vite 6</span>
+      <span class="hero-tag">Tailwind 4</span>
+      <span class="hero-tag">Claude 3.5</span>
+      <span class="hero-tag">Manus Cloud</span>
+    </div>
+  </section>
+
+  <!-- ── 02 STACK ── -->
+  <section class="section" id="stack">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Stack Tecnológico</h2>
+        <p class="section-subtitle">Camadas de tecnologia do sistema — do banco de dados ao browser</p>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:32px;">
+      <div class="card">
+        <div class="code-label">Frontend</div>
+        <div class="card-title">React 19 + Vite 6</div>
+        <div class="card-desc">React 19 com Concurrent Features. Vite 6 para bundling com HMR. Tailwind CSS 4 com design tokens Portí. shadcn/ui para componentes base. Wouter para roteamento client-side.</div>
+      </div>
+      <div class="card">
+        <div class="code-label">Backend</div>
+        <div class="card-title">Express 4 + tRPC 11</div>
+        <div class="card-desc">Express 4 como servidor HTTP. tRPC 11 para contratos type-safe end-to-end. Superjson para serialização (Date, BigInt). tsx watch para hot reload em desenvolvimento.</div>
+      </div>
+      <div class="card">
+        <div class="code-label">Banco de Dados</div>
+        <div class="card-title">TiDB Cloud + Drizzle</div>
+        <div class="card-desc">TiDB Cloud (MySQL 8 compatível) para tabelas de cache e API keys. Drizzle ORM para schema type-safe. Supabase PostgreSQL para tabelas de usuários OAuth. mysql2 pool para queries diretas.</div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="code-label">Autenticação</div>
+        <div class="card-title">Manus OAuth 2.0</div>
+        <div class="card-desc">OAuth 2.0 com PKCE via plataforma Manus. JWT assinado com jose. Cookie httpOnly + Secure + SameSite=Lax. protectedProcedure injeta ctx.user em todas as procedures.</div>
+      </div>
+      <div class="card">
+        <div class="code-label">IA & LLM</div>
+        <div class="card-title">Claude 3.5 + RAG</div>
+        <div class="card-desc">Anthropic Claude 3.5 via invokeLLM(). Text-to-SQL com isSqlSafe() para proteção. RAG com chunking de documentos, embeddings TF-IDF e similaridade coseno. Fallback para queries SQL diretas.</div>
+      </div>
+      <div class="card">
+        <div class="code-label">Storage & Deploy</div>
+        <div class="card-title">S3 + Manus Cloud</div>
+        <div class="card-desc">S3-compatible storage via Manus Forge API. storagePut/storageGet helpers pré-configurados. Deploy em Manus Cloud com Cloudflare CDN. Domínio: porti-dash-avdjpsei.manus.space.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 ESTRUTURA ── -->
+  <section class="section section-alt" id="estrutura">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Estrutura de Arquivos</h2>
+        <p class="section-subtitle">Organização do repositório — 22 páginas, 12 routers, 3 serviços principais</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="code-label">Frontend — client/</div>
+        <div class="code-block">
+          <pre><span class="hl-purple">client/</span>
+├── src/
+│   ├── pages/                    <span class="hl-gray">← 22 páginas</span>
+│   │   ├── Dashboard.tsx         <span class="hl-gray">← KPIs e métricas</span>
+│   │   ├── Medicos.tsx           <span class="hl-gray">← lista + drawer</span>
+│   │   ├── IA.tsx                <span class="hl-gray">← chat com contexto</span>
+│   │   ├── IaAvancada.tsx        <span class="hl-gray">← Text-to-SQL + RAG</span>
+│   │   ├── Plantoes.tsx
+│   │   ├── Antecipacoes.tsx
+│   │   ├── Contratos.tsx
+│   │   ├── Relatorios.tsx
+│   │   ├── Produtos.tsx
+│   │   ├── Completude.tsx
+│   │   └── ... (12 mais)
+│   ├── components/
+│   │   ├── PortiLayout.tsx       <span class="hl-gray">← sidebar + header</span>
+│   │   ├── MedicoDrawer.tsx      <span class="hl-gray">← perfil completo</span>
+│   │   ├── AIChatBox.tsx         <span class="hl-gray">← streaming chat</span>
+│   │   └── SyncStatusBadge.tsx
+│   ├── lib/
+│   │   └── trpc.ts               <span class="hl-gray">← client binding</span>
+│   └── index.css                 <span class="hl-gray">← design tokens</span>
+└── index.html</pre>
+        </div>
+      </div>
+      <div>
+        <div class="code-label">Backend — server/</div>
+        <div class="code-block">
+          <pre><span class="hl-purple">server/</span>
+├── _core/                        <span class="hl-gray">← infraestrutura</span>
+│   ├── llm.ts                    <span class="hl-gray">← Claude AI</span>
+│   ├── oauth.ts                  <span class="hl-gray">← Manus OAuth</span>
+│   ├── env.ts                    <span class="hl-gray">← variáveis</span>
+│   └── context.ts                <span class="hl-gray">← ctx.user</span>
+├── routers/                      <span class="hl-gray">← 12 routers tRPC</span>
+│   ├── medicos.ts
+│   ├── sync.ts
+│   ├── finance.ts
+│   ├── motor.ts
+│   ├── medescomplica.ts
+│   └── iaAnalise.ts              <span class="hl-gray">← RAG + SQL</span>
+├── services/
+│   ├── syncService.ts            <span class="hl-gray">← 787 linhas</span>
+│   ├── embeddings.ts             <span class="hl-gray">← RAG chunks</span>
+│   └── textToSql.ts              <span class="hl-gray">← AI SQL gen</span>
+├── api/
+│   ├── v1.ts                     <span class="hl-gray">← 1086 linhas</span>
+│   ├── middleware.ts             <span class="hl-gray">← Bearer auth</span>
+│   └── ragUpload.ts              <span class="hl-gray">← multipart</span>
+├── mysql-client.ts               <span class="hl-gray">← pool singleton</span>
+└── routers.ts                    <span class="hl-gray">← AppRouter</span></pre>
+        </div>
+        <div class="code-label" style="margin-top:16px;">Schema & Shared</div>
+        <div class="code-block">
+          <pre><span class="hl-purple">drizzle/</span>
+├── schema.ts     <span class="hl-gray">← users, porti_users, invites</span>
+└── relations.ts  <span class="hl-gray">← relações Drizzle</span>
+
+<span class="hl-purple">shared/</span>
+├── const.ts      <span class="hl-gray">← COOKIE_NAME, etc.</span>
+└── types.ts      <span class="hl-gray">← tipos globais</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 04 BANCO ── -->
+  <section class="section" id="banco">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Banco de Dados</h2>
+        <p class="section-subtitle">16 tabelas MySQL/TiDB — arquitetura de cache + tabelas operacionais</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-bottom:32px;">
+      <strong>Arquitetura de dois bancos:</strong> Tabelas de cache e API keys ficam no <strong>TiDB Cloud (MySQL)</strong> via <code>getMysqlPool()</code>. Tabelas de usuários OAuth ficam no <strong>Supabase (PostgreSQL)</strong> via <code>getDb()</code> (Drizzle ORM). As duas camadas coexistem sem conflito.
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">Tabelas de Cache — TiDB/MySQL</div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Tabela</th><th>Descrição</th><th>Registros</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono-cell">cached_medicos</td><td>Médicos unificados (Porti + Motor + Finance)</td><td>~1.078</td></tr>
+            <tr><td class="mono-cell">cached_plantoes</td><td>Plantões e escalas hospitalares (Motor API)</td><td>variável</td></tr>
+            <tr><td class="mono-cell">cached_antecipacoes</td><td>Antecipações de plantões (Finance API)</td><td>variável</td></tr>
+            <tr><td class="mono-cell">cached_contratos</td><td>Contratos ativos por médico</td><td>variável</td></tr>
+            <tr><td class="mono-cell">cached_relatorios</td><td>Relatórios financeiros mensais</td><td>variável</td></tr>
+            <tr><td class="mono-cell">cached_produtos</td><td>Produtos Portí por médico</td><td>variável</td></tr>
+            <tr><td class="mono-cell">cached_finance_medicos</td><td>Dados financeiros detalhados</td><td>variável</td></tr>
+            <tr><td class="mono-cell">cached_mdc_medicos</td><td>Dados Medescomplica por médico</td><td>variável</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-label">Tabelas Operacionais</div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Tabela</th><th>Descrição</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono-cell">api_keys</td><td>Chaves de API com hash SHA-256, scopes e rate limit</td></tr>
+            <tr><td class="mono-cell">sync_logs</td><td>Histórico de sincronizações com status e erros</td></tr>
+            <tr><td class="mono-cell">rag_documents</td><td>Chunks de documentos indexados para RAG</td></tr>
+            <tr><td class="mono-cell">rag_queries_log</td><td>Histórico de perguntas ao sistema RAG/SQL</td></tr>
+            <tr><td class="mono-cell">users</td><td>Usuários OAuth (Supabase/PostgreSQL)</td></tr>
+            <tr><td class="mono-cell">porti_users</td><td>Perfis Portí vinculados aos usuários</td></tr>
+            <tr><td class="mono-cell">porti_invites</td><td>Convites de acesso ao sistema</td></tr>
+            <tr><td class="mono-cell">porti_password_resets</td><td>Tokens de reset de senha</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="code-label">Schema — cached_medicos (principal)</div>
+    <div class="code-block">
+      <pre><span class="hl-purple">CREATE TABLE</span> cached_medicos (
+  id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+  cpf         VARCHAR(11) NOT NULL UNIQUE,     <span class="hl-gray">-- chave de unificação</span>
+  nome        VARCHAR(255),
+  crm         VARCHAR(50),
+  email       VARCHAR(255),
+  telefone    VARCHAR(20),
+  pix         VARCHAR(255),
+  status      VARCHAR(50),
+  fontes      JSON,                             <span class="hl-gray">-- array de fontes (porti, motor, finance)</span>
+  lotes       JSON,                             <span class="hl-gray">-- lotes de antecipação</span>
+  extras      JSON,                             <span class="hl-gray">-- dados extensíveis</span>
+  syncedAt    BIGINT,                           <span class="hl-gray">-- Unix timestamp ms</span>
+  createdAt   BIGINT NOT NULL,
+  updatedAt   BIGINT NOT NULL,
+  INDEX idx_cpf (cpf),
+  INDEX idx_status (status),
+  INDEX idx_syncedAt (syncedAt)
+);</pre>
+    </div>
+
+    <div class="code-label" style="margin-top:24px;">Schema — rag_documents (RAG)</div>
+    <div class="code-block">
+      <pre><span class="hl-purple">CREATE TABLE</span> rag_documents (
+  id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title       VARCHAR(500) NOT NULL,
+  source      VARCHAR(255),                     <span class="hl-gray">-- nome do arquivo original</span>
+  chunk_index INT NOT NULL DEFAULT 0,           <span class="hl-gray">-- índice do chunk</span>
+  content     TEXT NOT NULL,                    <span class="hl-gray">-- texto do chunk (max ~500 tokens)</span>
+  embedding   JSON,                             <span class="hl-gray">-- vetor TF-IDF ou futuro embedding</span>
+  metadata    JSON,                             <span class="hl-gray">-- mime_type, file_size, etc.</span>
+  createdAt   BIGINT NOT NULL
+);</pre>
+    </div>
+  </section>
+
+  <!-- ── 05 SYNC ── -->
+  <section class="section section-alt" id="sync">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Pipeline de Sincronização</h2>
+        <p class="section-subtitle">syncService.ts (787 linhas) — orquestra 4 APIs externas em paralelo e persiste no MySQL</p>
+      </div>
+    </div>
+
+    <div class="pipeline" style="gap:16px; margin-bottom:40px;">
+      <div class="pipeline-step">
+        <div class="pipeline-num">01 · FONTES</div>
+        <div class="pipeline-title">4 APIs Externas</div>
+        <ul class="pipeline-items">
+          <li>Porti API — CPF, CRM, PIX</li>
+          <li>Motor API — escalas</li>
+          <li>Finance API — contratos</li>
+          <li>Medescomplica — NFs</li>
+        </ul>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">02 · TRANSFORM</div>
+        <div class="pipeline-title">syncMedicos()</div>
+        <ul class="pipeline-items">
+          <li>Normaliza CPF (11 dígitos)</li>
+          <li>Merge por chave CPF</li>
+          <li>Constrói fontes[] JSON</li>
+          <li>Constrói lotes[] JSON</li>
+        </ul>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">03 · PERSIST</div>
+        <div class="pipeline-title">cached_medicos</div>
+        <ul class="pipeline-items">
+          <li>INSERT ON DUPLICATE KEY</li>
+          <li>1.078 registros ativos</li>
+          <li>syncedAt = NOW()</li>
+          <li>extras JSON extensível</li>
+        </ul>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">04 · SERVE</div>
+        <div class="pipeline-title">tRPC perfilCompleto</div>
+        <ul class="pipeline-items">
+          <li>protectedProcedure</li>
+          <li>JOIN cached_finance_*</li>
+          <li>JOIN cached_mdc_*</li>
+          <li>Calcula completude %</li>
+        </ul>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">05 · RENDER</div>
+        <div class="pipeline-title">MedicoDrawer</div>
+        <ul class="pipeline-items">
+          <li>Drawer lateral full-height</li>
+          <li>Abas: Dados, Produtos</li>
+          <li>Badge de completude</li>
+          <li>Links para sistemas</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="code-label">Estrutura fontes[] — Unificação por CPF</div>
+    <div class="code-block">
+      <pre><span class="hl-gray">// cached_medicos.fontes (JSON array)</span>
+[
+  {
+    <span class="hl-amber">"source"</span>: <span class="hl-green">"porti"</span>,
+    <span class="hl-amber">"cpf"</span>: <span class="hl-green">"12345678901"</span>,
+    <span class="hl-amber">"nome"</span>: <span class="hl-green">"Dr. João Silva"</span>,
+    <span class="hl-amber">"crm"</span>: <span class="hl-green">"SP-123456"</span>,
+    <span class="hl-amber">"pix"</span>: <span class="hl-green">"12345678901"</span>,
+    <span class="hl-amber">"status"</span>: <span class="hl-green">"ativo"</span>
+  },
+  {
+    <span class="hl-amber">"source"</span>: <span class="hl-green">"motor"</span>,
+    <span class="hl-amber">"cpf"</span>: <span class="hl-green">"12345678901"</span>,
+    <span class="hl-amber">"escalaId"</span>: <span class="hl-blue">4821</span>,
+    <span class="hl-amber">"hospital"</span>: <span class="hl-green">"Hospital São Lucas"</span>,
+    <span class="hl-amber">"totalPlantoes"</span>: <span class="hl-blue">47</span>
+  }
+]</pre>
+    </div>
+  </section>
+
+  <!-- ── 06 TRPC ── -->
+  <section class="section" id="trpc">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <div class="section-title-group">
+        <h2 class="section-title">tRPC Procedures</h2>
+        <p class="section-subtitle">12 routers com procedures type-safe end-to-end — sem REST manual, sem Axios</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-bottom:32px;">
+      <strong>Padrão de uso:</strong> Todas as chamadas do frontend usam <code>trpc.*.useQuery()</code> ou <code>trpc.*.useMutation()</code>. Tipos fluem automaticamente do schema Zod no servidor para o componente React. Nenhuma chamada <code>fetch()</code> direta.
+    </div>
+
+    <table class="data-table" style="margin-bottom:32px;">
+      <thead>
+        <tr><th>Router</th><th>Procedure</th><th>Tipo</th><th>Descrição</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono-cell">auth</td><td><code>me</code></td><td><span class="badge badge-pub">public</span></td><td>Retorna usuário autenticado ou null</td></tr>
+        <tr><td class="mono-cell">auth</td><td><code>logout</code></td><td><span class="badge badge-prot">protected</span></td><td>Invalida cookie de sessão</td></tr>
+        <tr><td class="mono-cell">medicos</td><td><code>list</code></td><td><span class="badge badge-prot">protected</span></td><td>Lista paginada com filtros (search, status, page, limit)</td></tr>
+        <tr><td class="mono-cell">medicos</td><td><code>perfilCompleto</code></td><td><span class="badge badge-prot">protected</span></td><td>Perfil unificado por CPF com completude %</td></tr>
+        <tr><td class="mono-cell">medicos</td><td><code>stats</code></td><td><span class="badge badge-prot">protected</span></td><td>KPIs: total, ativos, com PIX, com Medescomplica</td></tr>
+        <tr><td class="mono-cell">sync</td><td><code>trigger</code></td><td><span class="badge badge-prot">protected</span></td><td>Dispara sincronização manual com todas as APIs</td></tr>
+        <tr><td class="mono-cell">sync</td><td><code>status</code></td><td><span class="badge badge-prot">protected</span></td><td>Último sync: timestamp, duração, registros</td></tr>
+        <tr><td class="mono-cell">finance</td><td><code>antecipacoes</code></td><td><span class="badge badge-prot">protected</span></td><td>Antecipações com filtros de data e médico</td></tr>
+        <tr><td class="mono-cell">finance</td><td><code>relatorios</code></td><td><span class="badge badge-prot">protected</span></td><td>Relatórios financeiros mensais</td></tr>
+        <tr><td class="mono-cell">motor</td><td><code>plantoes</code></td><td><span class="badge badge-prot">protected</span></td><td>Plantões por médico, hospital e período</td></tr>
+        <tr><td class="mono-cell">iaAnalise</td><td><code>textToSql</code></td><td><span class="badge badge-prot">protected</span></td><td>Pergunta em linguagem natural → SQL → resultado</td></tr>
+        <tr><td class="mono-cell">iaAnalise</td><td><code>uploadDocument</code></td><td><span class="badge badge-prot">protected</span></td><td>Indexa documento para RAG (via /api/rag/upload)</td></tr>
+        <tr><td class="mono-cell">iaAnalise</td><td><code>searchDocs</code></td><td><span class="badge badge-prot">protected</span></td><td>Busca semântica por similaridade coseno</td></tr>
+        <tr><td class="mono-cell">iaAnalise</td><td><code>queryHybrid</code></td><td><span class="badge badge-prot">protected</span></td><td>RAG + contexto SQL combinados em uma resposta</td></tr>
+        <tr><td class="mono-cell">iaAnalise</td><td><code>queryHistory</code></td><td><span class="badge badge-prot">protected</span></td><td>Histórico de consultas de rag_queries_log</td></tr>
+        <tr><td class="mono-cell">system</td><td><code>notifyOwner</code></td><td><span class="badge badge-prot">protected</span></td><td>Envia notificação push ao proprietário via Forge API</td></tr>
+      </tbody>
+    </table>
+
+    <div class="code-label">Exemplo — Consumo no Frontend</div>
+    <div class="code-block">
+      <pre><span class="hl-gray">// Listagem de médicos com filtros</span>
+<span class="hl-purple">const</span> { data, isLoading } = trpc.medicos.list.<span class="hl-blue">useQuery</span>({
+  page: <span class="hl-blue">1</span>, limit: <span class="hl-blue">50</span>,
+  search: <span class="hl-green">"João"</span>,
+  status: <span class="hl-green">"ativo"</span>
+});
+
+<span class="hl-gray">// Mutation com invalidação de cache</span>
+<span class="hl-purple">const</span> syncMutation = trpc.sync.trigger.<span class="hl-blue">useMutation</span>({
+  onSuccess: () => trpc.<span class="hl-blue">useUtils</span>().medicos.list.<span class="hl-blue">invalidate</span>()
+});
+
+<span class="hl-gray">// Text-to-SQL</span>
+<span class="hl-purple">const</span> sqlQuery = trpc.iaAnalise.textToSql.<span class="hl-blue">useMutation</span>();
+<span class="hl-purple">await</span> sqlQuery.<span class="hl-blue">mutateAsync</span>({
+  question: <span class="hl-green">"Quais médicos têm mais de 20 plantões e não usam Medescomplica?"</span>
+});</pre>
+    </div>
+  </section>
+
+  <!-- ── 07 API REST ── -->
+  <section class="section section-alt" id="api-rest">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <div class="section-title-group">
+        <h2 class="section-title">API REST v1</h2>
+        <p class="section-subtitle">API pública com autenticação por Bearer token — para integrações externas (WhatsApp, Lovable, etc.)</p>
+      </div>
+    </div>
+
+    <div class="callout callout-success" style="margin-bottom:32px;">
+      <strong>Base URL de produção:</strong> <code>https://porti-dash-avdjpsei.manus.space/api/v1</code><br>
+      Health check público: <code>GET /health</code> → <code>200 OK</code> sem autenticação.
+    </div>
+
+    <table class="data-table" style="margin-bottom:32px;">
+      <thead>
+        <tr><th>Método</th><th>Endpoint</th><th>Scope</th><th>Descrição</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/health</td>
+          <td>—</td>
+          <td>Health check público. Retorna <code>{ status: "ok", timestamp }</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/medicos</td>
+          <td><span class="badge badge-pub">medicos</span></td>
+          <td>Lista paginada. Params: <code>page</code>, <code>limit</code>, <code>search</code>, <code>status</code>, <code>hospital</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/medicos/:cpf</td>
+          <td><span class="badge badge-pub">medicos</span></td>
+          <td>Dados básicos do médico por CPF</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/medicos/:cpf/perfil-completo</td>
+          <td><span class="badge badge-pub">medicos</span></td>
+          <td>Perfil unificado: dados + plantões + antecipações + produtos + completude %</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/plantoes</td>
+          <td><span class="badge badge-pub">plantoes</span></td>
+          <td>Plantões com filtros: <code>medico_id</code>, <code>hospital</code>, <code>data_inicio</code>, <code>data_fim</code></td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/antecipacoes</td>
+          <td><span class="badge badge-pub">antecipacoes</span></td>
+          <td>Antecipações com filtros de data e status</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/contratos</td>
+          <td><span class="badge badge-pub">contratos</span></td>
+          <td>Contratos ativos com vencimento e status</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-get">GET</span></td>
+          <td class="mono-cell">/relatorios</td>
+          <td><span class="badge badge-pub">relatorios</span></td>
+          <td>Relatórios financeiros mensais</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-post">POST</span></td>
+          <td class="mono-cell">/sync/trigger</td>
+          <td><span class="badge badge-pub">sync</span></td>
+          <td>Dispara sincronização manual com todas as APIs externas</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-post">POST</span></td>
+          <td class="mono-cell">/api/rag/upload</td>
+          <td>JWT session</td>
+          <td>Upload multipart de PDF/TXT/MD/CSV para indexação RAG</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="code-label">Exemplo — Chamada com Bearer Token</div>
+    <div class="code-block">
+      <pre><span class="hl-gray"># Buscar perfil completo de um médico por CPF</span>
+curl -s \
+  -H <span class="hl-green">"Authorization: Bearer pk_live_kjXzV-0N1dvbHou4UZ3Vz0gR7AuhCDL3kwPJRT0oW2M"</span> \
+  <span class="hl-green">"https://porti-dash-avdjpsei.manus.space/api/v1/medicos/12345678901/perfil-completo"</span>
+
+<span class="hl-gray"># Resposta</span>
+{
+  <span class="hl-amber">"cpf"</span>: <span class="hl-green">"12345678901"</span>,
+  <span class="hl-amber">"nome"</span>: <span class="hl-green">"Dr. João Silva"</span>,
+  <span class="hl-amber">"completude"</span>: <span class="hl-blue">87</span>,
+  <span class="hl-amber">"plantoes"</span>: [...],
+  <span class="hl-amber">"antecipacoes"</span>: [...],
+  <span class="hl-amber">"produtos"</span>: [...]
+}</pre>
+    </div>
+  </section>
+
+  <!-- ── 08 AUTH ── -->
+  <section class="section" id="auth">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Autenticação</h2>
+        <p class="section-subtitle">Dois sistemas paralelos — OAuth 2.0 para o dashboard interno e Bearer token para a API REST</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">OAuth 2.0 — Dashboard Interno</div>
+        <div class="code-block">
+          <pre><span class="hl-gray">// 1. Frontend gera URL de login</span>
+<span class="hl-purple">const</span> loginUrl = <span class="hl-blue">getLoginUrl</span>(<span class="hl-green">"/dashboard"</span>);
+<span class="hl-gray">// encoda window.location.origin + returnPath no state</span>
+
+<span class="hl-gray">// 2. Callback no servidor</span>
+<span class="hl-gray">// GET /api/oauth/callback?code=...&state=...</span>
+<span class="hl-gray">// → troca code por token com OAUTH_SERVER_URL</span>
+<span class="hl-gray">// → assina JWT com JWT_SECRET</span>
+<span class="hl-gray">// → seta cookie httpOnly + Secure + SameSite=Lax</span>
+
+<span class="hl-gray">// 3. Cada request tRPC</span>
+<span class="hl-gray">// → server/_core/context.ts lê o cookie</span>
+<span class="hl-gray">// → verifica JWT → injeta ctx.user</span>
+
+<span class="hl-gray">// 4. Frontend lê estado</span>
+<span class="hl-purple">const</span> { user, isLoading } = <span class="hl-blue">useAuth</span>();</pre>
+        </div>
+      </div>
+      <div>
+        <div class="code-label">Bearer Token — API REST v1</div>
+        <div class="code-block">
+          <pre><span class="hl-gray">// middleware.ts — validação da chave</span>
+<span class="hl-purple">async function</span> <span class="hl-blue">requireApiKey</span>(req, res, next) {
+  <span class="hl-purple">const</span> raw = req.headers.authorization
+    ?.replace(<span class="hl-green">"Bearer "</span>, <span class="hl-green">""</span>)
+    || req.headers[<span class="hl-green">"x-api-key"</span>];
+
+  <span class="hl-purple">if</span> (!raw) <span class="hl-purple">return</span> res.<span class="hl-blue">status</span>(<span class="hl-blue">401</span>).<span class="hl-blue">json</span>({...});
+
+  <span class="hl-gray">// SHA-256 hash para lookup seguro</span>
+  <span class="hl-purple">const</span> hash = crypto
+    .<span class="hl-blue">createHash</span>(<span class="hl-green">"sha256"</span>)
+    .<span class="hl-blue">update</span>(raw).<span class="hl-blue">digest</span>(<span class="hl-green">"hex"</span>);
+
+  <span class="hl-gray">// Busca no MySQL por keyHash</span>
+  <span class="hl-purple">const</span> [rows] = <span class="hl-purple">await</span> pool.<span class="hl-blue">execute</span>(
+    <span class="hl-green">"SELECT * FROM api_keys WHERE keyHash=? AND active=1"</span>,
+    [hash]
+  );
+
+  <span class="hl-gray">// Verifica scope + rate limit</span>
+  <span class="hl-purple">if</span> (!<span class="hl-blue">hasScope</span>(key, endpoint)) <span class="hl-purple">return</span> <span class="hl-blue">403</span>;
+  <span class="hl-purple">if</span> (!<span class="hl-blue">checkRateLimit</span>(key.id)) <span class="hl-purple">return</span> <span class="hl-blue">429</span>;
+
+  req.apiKey = key; <span class="hl-blue">next</span>();
+}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 09 SEGURANÇA ── -->
+  <section class="section section-alt" id="seguranca">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Segurança</h2>
+        <p class="section-subtitle">SHA-256 hash, scopes granulares, rate limiting, SQL safety e transport security</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">API Key — Armazenamento Seguro</div>
+        <table class="data-table">
+          <thead><tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">keyHash</td><td>VARCHAR(64)</td><td>SHA-256 da chave — nunca plaintext</td></tr>
+            <tr><td class="mono-cell">keyPrefix</td><td>VARCHAR(20)</td><td>Primeiros 12 chars para identificação</td></tr>
+            <tr><td class="mono-cell">active</td><td>TINYINT(1)</td><td>Revogação instantânea</td></tr>
+            <tr><td class="mono-cell">scopes</td><td>JSON</td><td>Array de escopos permitidos</td></tr>
+            <tr><td class="mono-cell">expiresAt</td><td>BIGINT | NULL</td><td>TTL opcional em Unix ms</td></tr>
+            <tr><td class="mono-cell">rateLimit</td><td>INT</td><td>Máximo de req/hora (padrão: 1000)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-label">Rate Limiting — Headers de Resposta</div>
+        <div class="code-block">
+          <pre><span class="hl-gray">// Headers retornados em cada resposta</span>
+X-RateLimit-Limit:     <span class="hl-blue">1000</span>
+X-RateLimit-Remaining: <span class="hl-blue">N</span>
+X-RateLimit-Reset:     <span class="hl-blue">epoch_ms</span>
+
+<span class="hl-gray">// Quando excede o limite</span>
+HTTP <span class="hl-red">429</span> Too Many Requests
+Retry-After: <span class="hl-blue">seconds_until_reset</span>
+
+<span class="hl-gray">// Store: Map&lt;keyId, {count, resetAt}&gt;</span>
+<span class="hl-gray">// Window: 3600s (sliding)</span>
+<span class="hl-gray">// Granularidade: por API key</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-label">SQL Safety — isSqlSafe() para Text-to-SQL</div>
+    <div class="code-block" style="margin-bottom:24px;">
+      <pre><span class="hl-gray">// server/services/textToSql.ts</span>
+<span class="hl-purple">function</span> <span class="hl-blue">isSqlSafe</span>(sql: <span class="hl-blue">string</span>): <span class="hl-blue">boolean</span> {
+  <span class="hl-purple">const</span> BLOCKED = [
+    <span class="hl-green">"DROP"</span>, <span class="hl-green">"DELETE"</span>, <span class="hl-green">"UPDATE"</span>, <span class="hl-green">"INSERT"</span>,
+    <span class="hl-green">"ALTER"</span>, <span class="hl-green">"CREATE"</span>, <span class="hl-green">"TRUNCATE"</span>, <span class="hl-green">"EXEC"</span>,
+    <span class="hl-green">"GRANT"</span>, <span class="hl-green">"REVOKE"</span>, <span class="hl-green">"--"</span>, <span class="hl-green">";"</span>
+  ];
+  <span class="hl-purple">const</span> upper = sql.<span class="hl-blue">toUpperCase</span>();
+  <span class="hl-purple">return</span> !BLOCKED.<span class="hl-blue">some</span>(kw => upper.<span class="hl-blue">includes</span>(kw));
+}
+<span class="hl-gray">// Apenas SELECT permitido · timeout 5000ms · queries parametrizadas</span></pre>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">Session Cookie</div>
+        <div class="card-desc"><code>httpOnly</code> + <code>Secure</code> + <code>SameSite=Lax</code>. Assinado com <code>JWT_SECRET</code> via <code>jose</code>. Sem acesso JavaScript ao token.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CORS</div>
+        <div class="card-desc">Configurado no Express com whitelist de origens. Preflight OPTIONS tratado automaticamente. Credentials permitidas apenas para origens autorizadas.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Secrets Injection</div>
+        <div class="card-desc">Nenhuma variável sensível commitada no repositório. Todas injetadas pela plataforma Manus em runtime. Chaves nunca chegam ao bundle do browser.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 10 IA ── -->
+  <section class="section" id="ia">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <div class="section-title-group">
+        <h2 class="section-title">IA Avançada — RAG + Text-to-SQL</h2>
+        <p class="section-subtitle">Camada analítica paralela ao MySQL — sem sobrepor nenhuma tabela existente</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-bottom:32px;">
+      <strong>Arquitetura paralela:</strong> A camada de IA foi implementada sem modificar nenhuma tabela ou rota existente. Duas novas tabelas (<code>rag_documents</code>, <code>rag_queries_log</code>) e um novo router (<code>iaAnalise</code>) foram adicionados de forma aditiva.
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">Text-to-SQL — Fluxo</div>
+        <div class="code-block">
+          <pre><span class="hl-gray">// 1. Usuário faz pergunta em linguagem natural</span>
+<span class="hl-green">"Quais médicos têm mais de 20 plantões</span>
+<span class="hl-green"> e não usam Medescomplica?"</span>
+
+<span class="hl-gray">// 2. Claude recebe schema das tabelas de cache</span>
+<span class="hl-gray">// 3. Gera SQL SELECT seguro</span>
+<span class="hl-purple">SELECT</span> m.nome, m.cpf, COUNT(p.id) as total_plantoes
+<span class="hl-purple">FROM</span> cached_medicos m
+<span class="hl-purple">LEFT JOIN</span> cached_mdc_medicos mdc <span class="hl-purple">ON</span> m.cpf = mdc.cpf
+<span class="hl-purple">WHERE</span> mdc.cpf <span class="hl-purple">IS NULL</span>
+<span class="hl-purple">GROUP BY</span> m.cpf
+<span class="hl-purple">HAVING</span> total_plantoes > <span class="hl-blue">20</span>
+
+<span class="hl-gray">// 4. isSqlSafe() valida → executa no MySQL</span>
+<span class="hl-gray">// 5. Retorna { sql, results, explanation }</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="code-label">RAG — Pipeline de Documentos</div>
+        <div class="code-block">
+          <pre><span class="hl-gray">// 1. Upload via POST /api/rag/upload</span>
+<span class="hl-gray">//    Suporta: PDF, TXT, MD, CSV</span>
+
+<span class="hl-gray">// 2. Extração de texto</span>
+<span class="hl-gray">//    PDF → pdf-parse → texto plano</span>
+
+<span class="hl-gray">// 3. Chunking</span>
+<span class="hl-purple">function</span> <span class="hl-blue">chunkText</span>(text, maxTokens = <span class="hl-blue">500</span>) {
+  <span class="hl-gray">// Divide por parágrafos</span>
+  <span class="hl-gray">// Respeita limite de tokens</span>
+  <span class="hl-gray">// Retorna string[]</span>
+}
+
+<span class="hl-gray">// 4. Embeddings (TF-IDF + fallback)</span>
+<span class="hl-gray">// 5. Persiste em rag_documents</span>
+
+<span class="hl-gray">// 6. Busca por similaridade coseno</span>
+<span class="hl-purple">function</span> <span class="hl-blue">cosineSimilarity</span>(a: <span class="hl-blue">number</span>[], b: <span class="hl-blue">number</span>[]) {
+  <span class="hl-purple">const</span> dot = a.<span class="hl-blue">reduce</span>((s, v, i) => s + v * b[i], <span class="hl-blue">0</span>);
+  <span class="hl-purple">return</span> dot / (norm(a) * norm(b));
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-label">Página /ia-avancada — 3 Abas</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">Aba 1 — Análise SQL</div>
+        <div class="card-desc">Campo de pergunta em linguagem natural. Exibe o SQL gerado pelo Claude. Resultado em tabela interativa. Histórico de consultas persistido em <code>rag_queries_log</code>.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Aba 2 — Base de Conhecimento</div>
+        <div class="card-desc">Upload de arquivos (PDF/TXT/MD/CSV). Lista de documentos indexados com título, fonte e número de chunks. Botão de exclusão por documento. Stats de cobertura.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Aba 3 — Consulta RAG</div>
+        <div class="card-desc">Pergunta em linguagem natural. Busca semântica nos documentos indexados. Resposta fundamentada com fontes citadas. Modo híbrido: RAG + contexto SQL combinados.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 11 FRONTEND ── -->
+  <section class="section section-alt" id="frontend">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Frontend</h2>
+        <p class="section-subtitle">22 páginas · Design System Portí · shadcn/ui · Tailwind 4</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">Paleta de Cores — Design System Portí</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;background:#551388;"></div>
+            <div><code>#551388</code> <span style="color:var(--porti-text-3); font-size:13px;">— Primary (roxo profundo)</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;background:#6007C1;"></div>
+            <div><code>#6007C1</code> <span style="color:var(--porti-text-3); font-size:13px;">— Accent (índigo)</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;background:#1A0A2E;"></div>
+            <div><code>#1A0A2E</code> <span style="color:var(--porti-text-3); font-size:13px;">— Sidebar (dark purple)</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;background:#F7F4EF;border:1px solid #ddd;"></div>
+            <div><code>#F7F4EF</code> <span style="color:var(--porti-text-3); font-size:13px;">— Background (off-white)</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;background:#111111;"></div>
+            <div><code>#111111</code> <span style="color:var(--porti-text-3); font-size:13px;">— Text (grafite)</span></div>
+          </div>
+        </div>
+        <div class="code-label">Tipografia</div>
+        <table class="data-table">
+          <thead><tr><th>Fonte</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">Space Grotesk</td><td>Títulos, headings, logo</td></tr>
+            <tr><td class="mono-cell">Inter</td><td>Corpo de texto, labels, UI</td></tr>
+            <tr><td class="mono-cell">JetBrains Mono</td><td>Código, CPF, valores técnicos</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-label">22 Páginas do Sistema</div>
+        <table class="data-table">
+          <thead><tr><th>Rota</th><th>Página</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">/</td><td>Home / Landing</td></tr>
+            <tr><td class="mono-cell">/login</td><td>Login com OAuth Manus</td></tr>
+            <tr><td class="mono-cell">/dashboard</td><td>KPIs e métricas gerais</td></tr>
+            <tr><td class="mono-cell">/medicos</td><td>Lista + Drawer de perfil completo</td></tr>
+            <tr><td class="mono-cell">/plantoes</td><td>Plantões por médico e hospital</td></tr>
+            <tr><td class="mono-cell">/antecipacoes</td><td>Antecipações financeiras</td></tr>
+            <tr><td class="mono-cell">/contratos</td><td>Contratos ativos</td></tr>
+            <tr><td class="mono-cell">/relatorios</td><td>Relatórios financeiros</td></tr>
+            <tr><td class="mono-cell">/produtos</td><td>Produtos Portí por médico</td></tr>
+            <tr><td class="mono-cell">/completude</td><td>Score de completude de cadastro</td></tr>
+            <tr><td class="mono-cell">/ia</td><td>Chat IA com contexto de dados</td></tr>
+            <tr><td class="mono-cell">/ia-avancada</td><td>Text-to-SQL + RAG + Base de Docs</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="code-label">Componentes Principais</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">PortiLayout.tsx</div>
+        <div class="card-desc">Sidebar com gradiente roxo profundo. Navegação agrupada por seção. SyncStatusBadge integrado. Responsivo com collapse em mobile.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">MedicoDrawer.tsx</div>
+        <div class="card-desc">Drawer lateral full-height com perfil completo do médico. Abas: Dados, Produtos, Plantões. Badge de completude % com cor semântica.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">AIChatBox.tsx</div>
+        <div class="card-desc">Chat com streaming de resposta. Histórico de mensagens. Markdown rendering via Streamdown. Contexto de dados injetado automaticamente.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 12 ENV ── -->
+  <section class="section" id="env">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Variáveis de Ambiente</h2>
+        <p class="section-subtitle">19 variáveis injetadas pela plataforma Manus — nenhuma commitada no repositório</p>
+      </div>
+    </div>
+
+    <div class="callout callout-warn" style="margin-bottom:32px;">
+      <strong>Regra crítica:</strong> Variáveis <code>VITE_*</code> são expostas ao browser via bundle Vite. Nunca colocar chaves sensíveis (API keys, JWT secrets) em variáveis VITE_*. Chaves server-side ficam em <code>server/_core/env.ts</code>.
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="env-group">
+          <div class="env-group-title">Banco de Dados & Auth</div>
+          <div class="env-row">
+            <span class="env-name">DATABASE_URL</span>
+            <span class="env-desc">Connection string MySQL/TiDB. Usada pelo <strong>Drizzle ORM</strong> e pelo <strong>getMysqlPool</strong>.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">SUPABASE_DATABASE_URL</span>
+            <span class="env-desc">PostgreSQL Supabase — usado pelo <strong>getDb()</strong> para tabelas de usuários OAuth.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">SUPABASE_SERVICE_KEY</span>
+            <span class="env-desc">Chave de serviço Supabase com permissões <strong>admin</strong> (bypass RLS).</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">JWT_SECRET</span>
+            <span class="env-desc">Assina e valida cookies de sessão OAuth via <strong>jose</strong>.</span>
+          </div>
+        </div>
+
+        <div class="env-group">
+          <div class="env-group-title">APIs Externas</div>
+          <div class="env-row">
+            <span class="env-name">PORTI_API_KEY</span>
+            <span class="env-desc">Chave Bearer para a <strong>API Porti</strong> (médicos, plantões, contratos, sync).</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">PORTI_API_URL</span>
+            <span class="env-desc">Base URL da API Porti.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">PORTI_FINANCE_API_KEY</span>
+            <span class="env-desc">Chave para endpoints financeiros (antecipações, relatórios).</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">MOTOR_API_KEY / _URL</span>
+            <span class="env-desc">API Motor — dados de plantões e escalas hospitalares.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">MEDESCOMPLICA_API_KEY / _URL</span>
+            <span class="env-desc">API Medescomplica — adesão e status de produto por médico.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">ANTHROPIC_API_KEY</span>
+            <span class="env-desc">Chave Claude API — usada pelo <strong>invokeLLM()</strong>, Text-to-SQL e embeddings RAG.</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="env-group">
+          <div class="env-group-title">OAuth & Plataforma Manus</div>
+          <div class="env-row">
+            <span class="env-name">OAUTH_SERVER_URL</span>
+            <span class="env-desc">Backend do Manus OAuth (server-side). Usado em <code>server/_core/oauth.ts</code>.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">OWNER_OPEN_ID</span>
+            <span class="env-desc">OpenID do proprietário da conta Manus — identifica o admin principal.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">OWNER_NAME</span>
+            <span class="env-desc">Nome do proprietário exibido em notificações e logs.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">BUILT_IN_FORGE_API_KEY / _URL</span>
+            <span class="env-desc">APIs internas Manus (LLM, Storage S3, Notificações, Image Gen) — <strong>server-side only</strong>.</span>
+          </div>
+        </div>
+
+        <div class="env-group">
+          <div class="env-group-title">Frontend — VITE_* (expostos ao browser)</div>
+          <div class="env-row">
+            <span class="env-name">VITE_APP_ID</span>
+            <span class="env-desc">ID da aplicação OAuth — enviado no redirect para o portal de login.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">VITE_OAUTH_PORTAL_URL</span>
+            <span class="env-desc">URL do portal de login Manus. Usado em <code>getLoginUrl()</code> no client.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">VITE_FRONTEND_FORGE_API_KEY / _URL</span>
+            <span class="env-desc">Token de acesso às APIs Manus pelo <strong>browser</strong>.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">VITE_APP_TITLE / VITE_APP_LOGO</span>
+            <span class="env-desc">Nome e logo da aplicação injetados no <code>index.html</code> via Vite.</span>
+          </div>
+          <div class="env-row">
+            <span class="env-name">VITE_ANALYTICS_ENDPOINT / _WEBSITE_ID</span>
+            <span class="env-desc">Endpoint e ID do Umami Analytics para rastreamento de pageviews.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 13 DEPLOY ── -->
+  <section class="section section-alt" id="deploy">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Deploy & Infraestrutura</h2>
+        <p class="section-subtitle">Manus Cloud · TiDB Cloud · S3 · Cloudflare CDN · 6 checkpoints com rollback</p>
+      </div>
+    </div>
+
+    <div class="stat-row" style="margin-bottom:40px;">
+      <div class="stat-item">
+        <span class="stat-num">6</span>
+        <span class="stat-label">checkpoints com rollback</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">0</span>
+        <span class="stat-label">erros TypeScript em produção</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">23</span>
+        <span class="stat-label">novos testes (IA Avançada)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">~78</span>
+        <span class="stat-label">testes Vitest totais</span>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">Stack de Produção</div>
+        <table class="data-table">
+          <thead><tr><th>Camada</th><th>Tecnologia</th><th>Detalhe</th></tr></thead>
+          <tbody>
+            <tr><td>Runtime</td><td class="mono-cell">Manus Cloud</td><td>Node.js 22 · Express 4 · tsx watch</td></tr>
+            <tr><td>Banco</td><td class="mono-cell">TiDB Cloud</td><td>MySQL 8 compatível · SSL obrigatório</td></tr>
+            <tr><td>Storage</td><td class="mono-cell">S3-Compatible</td><td>Manus Forge API · bucket público</td></tr>
+            <tr><td>CDN</td><td class="mono-cell">Cloudflare</td><td>TLS automático · edge cache · anycast</td></tr>
+            <tr><td>Auth</td><td class="mono-cell">Manus OAuth 2.0</td><td>JWT cookie · protectedProcedure</td></tr>
+            <tr><td>Domínio</td><td class="mono-cell">porti-dash-avdjpsei.manus.space</td><td>Produção estável</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-label">Pipeline de Entrega</div>
+        <div style="display:flex; flex-direction:column; gap:0;">
+          <div style="display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--porti-border);">
+            <div style="width:28px;height:28px;background:var(--porti-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">01</div>
+            <div><strong style="font-size:13px;">git push → user_github remote</strong><br><span style="font-size:12px;color:var(--porti-text-3);">Sync automático com repositório GitHub do usuário</span></div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--porti-border);">
+            <div style="width:28px;height:28px;background:var(--porti-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">02</div>
+            <div><strong style="font-size:13px;">webdev_save_checkpoint</strong><br><span style="font-size:12px;color:var(--porti-text-3);">Snapshot imutável com version_id · rollback disponível a qualquer momento</span></div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--porti-border);">
+            <div style="width:28px;height:28px;background:var(--porti-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">03</div>
+            <div><strong style="font-size:13px;">pnpm build → Vite + tsc</strong><br><span style="font-size:12px;color:var(--porti-text-3);">Bundle client/ · compilação TypeScript server/ · zero erros</span></div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--porti-border);">
+            <div style="width:28px;height:28px;background:var(--porti-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">04</div>
+            <div><strong style="font-size:13px;">Publish → domínio estável</strong><br><span style="font-size:12px;color:var(--porti-text-3);">Deploy atômico · zero downtime · CDN propagação automática</span></div>
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:12px; padding:12px 0;">
+            <div style="width:28px;height:28px;background:var(--porti-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">05</div>
+            <div><strong style="font-size:13px;">pnpm db:push (Drizzle migrate)</strong><br><span style="font-size:12px;color:var(--porti-text-3);">drizzle-kit generate → migrate → schema sync TiDB</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 14 TESTES ── -->
+  <section class="section" id="testes">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Testes Automatizados</h2>
+        <p class="section-subtitle">10 suítes Vitest · ~78 testes · estratégia de mocks para banco e LLM</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">Suítes de Teste</div>
+        <table class="data-table">
+          <thead><tr><th>Arquivo</th><th>Testes</th><th>Cobertura</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">auth.logout.test.ts</td><td>6</td><td>session, cookie, logout</td></tr>
+            <tr><td class="mono-cell">medicos.test.ts</td><td>10</td><td>list, filter, cache hit</td></tr>
+            <tr><td class="mono-cell">antecipacoes.test.ts</td><td>8</td><td>finance helpers</td></tr>
+            <tr><td class="mono-cell">finance.test.ts</td><td>7</td><td>relatorios, contratos</td></tr>
+            <tr><td class="mono-cell">motor.test.ts</td><td>4</td><td>plantões, escalas</td></tr>
+            <tr><td class="mono-cell">medescomplica.test.ts</td><td>4</td><td>produtos, adesão</td></tr>
+            <tr><td class="mono-cell">unificacao.test.ts</td><td>4</td><td>merge por CPF</td></tr>
+            <tr><td class="mono-cell">claude.test.ts</td><td>4</td><td>invokeLLM mock</td></tr>
+            <tr><td class="mono-cell">utils.test.ts</td><td>8</td><td>helpers gerais</td></tr>
+            <tr><td class="mono-cell" style="color:var(--porti-accent);font-weight:600;">iaAnalise.test.ts</td><td style="font-weight:700;">23</td><td>chunkText, cosine, isSqlSafe, router</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-label">Estratégia de Mocks</div>
+        <div class="code-block" style="margin-bottom:16px;">
+          <pre><span class="hl-gray">// getMysqlPool — pool in-memory</span>
+vi.<span class="hl-blue">mock</span>(<span class="hl-green">"../mysql-client"</span>, () => ({
+  getMysqlPool: () => ({
+    execute: vi.<span class="hl-blue">fn</span>().<span class="hl-blue">mockResolvedValue</span>([[]])
+  })
+}));
+
+<span class="hl-gray">// invokeLLM — retorna JSON estático</span>
+vi.<span class="hl-blue">mock</span>(<span class="hl-green">"../_core/llm"</span>, () => ({
+  invokeLLM: vi.<span class="hl-blue">fn</span>().<span class="hl-blue">mockResolvedValue</span>({
+    choices: [{ message: {
+      content: <span class="hl-green">"SELECT * FROM cached_medicos"</span>
+    }}]
+  })
+}));
+
+<span class="hl-gray">// storagePut — S3 mockado</span>
+vi.<span class="hl-blue">mock</span>(<span class="hl-green">"../storage"</span>, () => ({
+  storagePut: vi.<span class="hl-blue">fn</span>().<span class="hl-blue">mockResolvedValue</span>({
+    url: <span class="hl-green">"https://cdn.example.com/test.pdf"</span>
+  })
+}));</pre>
+        </div>
+        <div class="callout callout-success">
+          <strong>Testes puros (zero dependências externas):</strong> <code>cosineSimilarity</code>, <code>chunkText</code> e <code>isSqlSafe</code> são funções puras testadas sem nenhum mock.
+        </div>
+      </div>
+    </div>
+
+    <div class="code-label">Executar os Testes</div>
+    <div class="code-block">
+      <pre><span class="hl-gray"># Rodar todos os testes</span>
+pnpm test --run
+
+<span class="hl-gray"># Com output verbose</span>
+pnpm test --run --reporter=verbose
+
+<span class="hl-gray"># Apenas um arquivo</span>
+pnpm test --run server/iaAnalise.test.ts
+
+<span class="hl-gray"># Watch mode (desenvolvimento)</span>
+pnpm test</pre>
+    </div>
+  </section>
+
+  <!-- ── 15 ROADMAP ── -->
+  <section class="section section-dark" id="roadmap">
+    <div class="section-header">
+      <span class="section-num" style="background:rgba(155,109,255,0.2);border-color:rgba(155,109,255,0.4);color:#C4B5FD;">15</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Roadmap Técnico</h2>
+        <p class="section-subtitle">Três horizontes de evolução — 0 a 180 dias</p>
+      </div>
+    </div>
+
+    <div class="roadmap-grid">
+      <div class="roadmap-horizon">
+        <div class="roadmap-header h1">
+          <span class="roadmap-badge h1">H1</span>
+          <span class="roadmap-title">Curto Prazo</span>
+          <span class="roadmap-period">0–30 dias</span>
+        </div>
+        <div class="roadmap-items">
+          <div class="roadmap-item">
+            <span class="roadmap-idx h1">01</span>
+            <div><div class="roadmap-item-title">Alimentar Base RAG</div><div class="roadmap-item-desc">Upload de contratos, manuais Antecipai e Medescomplica em PDF para indexação semântica</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h1">02</span>
+            <div><div class="roadmap-item-title">Validar Endpoints v1</div><div class="roadmap-item-desc">Testes de integração em /plantoes, /relatorios e /medicos/{cpf}/perfil-completo com dados reais</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h1">03</span>
+            <div><div class="roadmap-item-title">Histórico de Consultas</div><div class="roadmap-item-desc">UI da aba "Histórico" em /ia-avancada consumindo rag_queries_log já persistido no MySQL</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h1">04</span>
+            <div><div class="roadmap-item-title">Corrigir medicos.test.ts</div><div class="roadmap-item-desc">10 testes pré-existentes falhando por mock desatualizado — isolar DB em ambiente de teste</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-horizon">
+        <div class="roadmap-header h2">
+          <span class="roadmap-badge h2">H2</span>
+          <span class="roadmap-title">Médio Prazo</span>
+          <span class="roadmap-period">30–90 dias</span>
+        </div>
+        <div class="roadmap-items">
+          <div class="roadmap-item">
+            <span class="roadmap-idx h2">01</span>
+            <div><div class="roadmap-item-title">Text-to-SQL com JOINs</div><div class="roadmap-item-desc">Evoluir textToSql.ts para suportar queries multi-tabela (médicos + plantões + contratos)</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h2">02</span>
+            <div><div class="roadmap-item-title">Dark Mode Toggle</div><div class="roadmap-item-desc">CSS variables .dark já configuradas — adicionar ThemeToggle no header do PortiLayout</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h2">03</span>
+            <div><div class="roadmap-item-title">Exportação PDF/Excel</div><div class="roadmap-item-desc">Endpoint /api/v1/relatorios/export gerando XLSX via exceljs e PDF via pdfkit server-side</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h2">04</span>
+            <div><div class="roadmap-item-title">Webhook WhatsApp</div><div class="roadmap-item-desc">Endpoint POST /api/v1/webhook/whatsapp integrando Flow com perfil médico por CPF</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-horizon">
+        <div class="roadmap-header h3">
+          <span class="roadmap-badge h3">H3</span>
+          <span class="roadmap-title">Longo Prazo</span>
+          <span class="roadmap-period">90–180 dias</span>
+        </div>
+        <div class="roadmap-items">
+          <div class="roadmap-item">
+            <span class="roadmap-idx h3">01</span>
+            <div><div class="roadmap-item-title">Multi-tenant SaaS</div><div class="roadmap-item-desc">Coluna tenant_id em todas as tabelas de cache + row-level security por organização</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h3">02</span>
+            <div><div class="roadmap-item-title">Embeddings Reais</div><div class="roadmap-item-desc">Substituir TF-IDF fallback por Voyage AI ou OpenAI text-embedding-3-small com pgvector</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h3">03</span>
+            <div><div class="roadmap-item-title">ETL Agendado</div><div class="roadmap-item-desc">Job cron substituindo sync manual — sincronização incremental via updated_at com retry exponencial</div></div>
+          </div>
+          <div class="roadmap-item">
+            <span class="roadmap-idx h3">04</span>
+            <div><div class="roadmap-item-title">Mobile App</div><div class="roadmap-item-desc">Expo + React Native consumindo tRPC — notificações push para alertas de antecipação</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 16 REFERÊNCIAS ── -->
+  <section class="section" id="referencias">
+    <div class="section-header">
+      <span class="section-num">16</span>
+      <div class="section-title-group">
+        <h2 class="section-title">Referências & Acesso</h2>
+        <p class="section-subtitle">URLs de produção, autenticação, scopes e stack completo</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:32px;">
+      <div>
+        <div class="code-label">URLs de Produção</div>
+        <table class="data-table">
+          <thead><tr><th>Endpoint</th><th>URL</th></tr></thead>
+          <tbody>
+            <tr><td>API Base</td><td class="mono-cell" style="font-size:11px;">https://porti-dash-avdjpsei.manus.space/api/v1</td></tr>
+            <tr><td>Health Check</td><td class="mono-cell" style="font-size:11px;">/health → <span class="badge badge-ok">200 OK</span></td></tr>
+            <tr><td>Médicos</td><td class="mono-cell" style="font-size:11px;">/medicos · /medicos/:cpf</td></tr>
+            <tr><td>Perfil Completo</td><td class="mono-cell" style="font-size:11px;">/medicos/:cpf/perfil-completo</td></tr>
+            <tr><td>Plantões</td><td class="mono-cell" style="font-size:11px;">/plantoes</td></tr>
+            <tr><td>Antecipações</td><td class="mono-cell" style="font-size:11px;">/antecipacoes</td></tr>
+            <tr><td>Contratos</td><td class="mono-cell" style="font-size:11px;">/contratos</td></tr>
+            <tr><td>Relatórios</td><td class="mono-cell" style="font-size:11px;">/relatorios</td></tr>
+            <tr><td>Sync Manual</td><td class="mono-cell" style="font-size:11px;">POST /sync/trigger</td></tr>
+            <tr><td>Upload RAG</td><td class="mono-cell" style="font-size:11px;">POST /api/rag/upload</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="code-label">Autenticação</div>
+        <div class="code-block" style="margin-bottom:16px;">
+          <pre><span class="hl-gray">// Header obrigatório para endpoints protegidos</span>
+Authorization: Bearer <span class="hl-green">pk_live_kjXzV-0N...</span>
+
+<span class="hl-gray">// Alternativa</span>
+x-api-key: <span class="hl-green">pk_live_kjXzV-0N...</span>
+
+<span class="hl-gray">// Rate limit: 1000 req/hr por chave</span>
+<span class="hl-gray">// SHA-256 hash no MySQL · nunca plaintext</span></pre>
+        </div>
+
+        <div class="code-label">Scopes Disponíveis</div>
+        <div class="scope-grid" style="margin-bottom:16px;">
+          <span class="scope-tag">medicos</span>
+          <span class="scope-tag">plantoes</span>
+          <span class="scope-tag">antecipacoes</span>
+          <span class="scope-tag">contratos</span>
+          <span class="scope-tag">relatorios</span>
+          <span class="scope-tag">sync</span>
+        </div>
+
+        <div class="code-label">Stack Completo</div>
+        <div class="stack-tags">
+          <span class="stack-tag">Node.js 22</span>
+          <span class="stack-tag">TypeScript 5</span>
+          <span class="stack-tag">Express 4</span>
+          <span class="stack-tag">tRPC 11</span>
+          <span class="stack-tag">Drizzle ORM</span>
+          <span class="stack-tag">TiDB Cloud</span>
+          <span class="stack-tag">React 19</span>
+          <span class="stack-tag">Vite 6</span>
+          <span class="stack-tag">Tailwind 4</span>
+          <span class="stack-tag">Vitest</span>
+          <span class="stack-tag">Claude 3.5</span>
+          <span class="stack-tag">Manus OAuth</span>
+          <span class="stack-tag">Cloudflare CDN</span>
+          <span class="stack-tag">S3 Storage</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer do site -->
+    <div style="border-top:2px solid var(--porti-accent); padding-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:800; color:var(--porti-text); letter-spacing:-0.5px;">Porti Negócios</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--porti-text-3); margin-top:4px;">Manual Técnico de Arquitetura · v8.2 · Março 2026</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:13px; color:var(--porti-text-2);">jonathansouzasarraf@gmail.com</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--porti-text-3); margin-top:4px;">
+Confidencial · Uso interno</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── BACK TO TOP ── -->
+<a class="back-to-top" id="backToTop" href="#overview">↑</a>
+
+<script>
+  // Back to top visibility
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('backToTop');
+    btn.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // Active nav item on scroll
+  const sections = document.querySelectorAll('section[id], .hero[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navItems.forEach(item => {
+          item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-60px 0px -40% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
