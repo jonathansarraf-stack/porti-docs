@@ -14,11 +14,11 @@
     --sidebar-bg: #1A0A2E;
     --bg: #F7F4EF;
     --text: #111111;
-    --text-muted: #555;
+    --text-muted: #666;
     --border: rgba(96,7,193,0.15);
     --glow: rgba(96,7,193,0.3);
     --card-bg: #ffffff;
-    --tag-bg: rgba(85,19,136,0.08);
+    --tag-bg: rgba(85,19,136,0.07);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,61 +27,50 @@
     font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   /* ── HEADER ── */
   .header {
     background: var(--sidebar-bg);
-    padding: 16px 32px;
+    padding: 14px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid rgba(139,47,201,0.3);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    flex-shrink: 0;
+    height: 52px;
   }
-  .header-logo {
-    display: flex; align-items: center; gap: 12px;
-  }
+  .header-logo { display: flex; align-items: center; gap: 10px; }
   .header-logo .dot {
-    width: 10px; height: 10px;
+    width: 9px; height: 9px;
     background: linear-gradient(135deg, #8B2FC9, #6007C1);
     border-radius: 50%;
     box-shadow: 0 0 8px var(--glow);
   }
-  .header-logo span {
-    color: #fff;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-  }
-  .header-logo small {
-    color: rgba(255,255,255,0.4);
-    font-size: 11px;
-    font-weight: 400;
-    margin-left: 4px;
-  }
+  .header-logo span { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px; }
+  .header-logo small { color: rgba(255,255,255,0.35); font-size: 11px; font-weight: 400; margin-left: 3px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .header-hint { font-size: 12px; color: rgba(255,255,255,0.35); }
   .header-badge {
     background: rgba(139,47,201,0.2);
     border: 1px solid rgba(139,47,201,0.4);
     color: #c084fc;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
   }
 
   /* ── MAIN LAYOUT ── */
   .main {
     display: flex;
-    height: calc(100vh - 57px);
+    flex: 1;
+    overflow: hidden;
   }
 
-  /* ── CANVAS AREA ── */
+  /* ── CANVAS ── */
   .canvas {
     flex: 1;
     position: relative;
@@ -91,17 +80,15 @@
       radial-gradient(circle at 20% 20%, rgba(85,19,136,0.04) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, rgba(96,7,193,0.04) 0%, transparent 50%);
   }
-
-  /* Grid dots */
   .canvas::before {
     content: '';
     position: absolute; inset: 0;
-    background-image: radial-gradient(circle, rgba(85,19,136,0.12) 1px, transparent 1px);
-    background-size: 32px 32px;
+    background-image: radial-gradient(circle, rgba(85,19,136,0.1) 1px, transparent 1px);
+    background-size: 36px 36px;
     pointer-events: none;
   }
 
-  /* ── SVG CONNECTIONS ── */
+  /* ── SVG ── */
   .connections-svg {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
@@ -114,100 +101,83 @@
     position: absolute;
     cursor: pointer;
     z-index: 10;
-    transition: transform 0.2s ease, filter 0.2s ease;
+    transition: transform 0.18s ease, filter 0.18s ease;
     user-select: none;
   }
-  .node:hover { transform: translateY(-3px) scale(1.03); }
+  .node:hover { transform: translateY(-3px) scale(1.04) !important; }
   .node.active .node-card {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(96,7,193,0.2), 0 8px 32px rgba(96,7,193,0.25) !important;
+    box-shadow: 0 0 0 3px rgba(96,7,193,0.18), 0 8px 28px rgba(96,7,193,0.22) !important;
   }
 
   .node-card {
     background: var(--card-bg);
     border: 1.5px solid var(--border);
     border-radius: 14px;
-    padding: 20px 24px;
-    min-width: 160px;
+    padding: 16px 20px;
+    width: 148px;
     text-align: center;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    transition: all 0.2s ease;
-    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    transition: all 0.18s ease;
   }
   .node-card:hover {
-    border-color: rgba(96,7,193,0.4);
-    box-shadow: 0 4px 24px rgba(96,7,193,0.15);
+    border-color: rgba(96,7,193,0.35);
+    box-shadow: 0 4px 20px rgba(96,7,193,0.14);
   }
 
-  .node-icon {
-    font-size: 34px;
-    margin-bottom: 8px;
-    display: block;
-    line-height: 1;
-  }
-  .node-label {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 0.3px;
-    display: block;
-  }
-  .node-sublabel {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 4px;
-    display: block;
-  }
+  .node-icon { font-size: 30px; margin-bottom: 7px; display: block; line-height: 1; }
+  .node-label { font-size: 13px; font-weight: 700; color: var(--text); display: block; }
+  .node-sublabel { font-size: 10.5px; color: var(--text-muted); margin-top: 3px; display: block; line-height: 1.3; }
 
-  /* Node variants */
+  /* Variants */
   .node-core .node-card {
     background: linear-gradient(135deg, #1A0A2E, #2D1050);
     border-color: rgba(139,47,201,0.5);
-    min-width: 200px;
-    padding: 26px 32px;
+    width: 178px;
+    padding: 22px 26px;
   }
-  .node-core .node-label { color: #fff; font-size: 17px; }
-  .node-core .node-sublabel { color: rgba(255,255,255,0.5); font-size: 12px; }
-  .node-core .node-icon { font-size: 44px; }
-
-  .node-api .node-card { border-color: rgba(96,7,193,0.25); }
-  .node-db .node-card { border-color: rgba(16,185,129,0.3); }
-  .node-frontend .node-card { border-color: rgba(59,130,246,0.3); }
-  .node-ai .node-card { border-color: rgba(245,158,11,0.3); }
-  .node-external .node-card { border-color: rgba(156,163,175,0.4); background: #f9f9f9; }
-
-  /* Pulse animation on core node */
+  .node-core .node-label { color: #fff; font-size: 16px; }
+  .node-core .node-sublabel { color: rgba(255,255,255,0.45); font-size: 11px; }
+  .node-core .node-icon { font-size: 40px; }
   .node-core .node-card::after {
     content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 18px;
-    border: 2px solid rgba(139,47,201,0.3);
-    animation: pulse-ring 2.5s ease-out infinite;
+    position: absolute; inset: -5px;
+    border-radius: 19px;
+    border: 2px solid rgba(139,47,201,0.25);
+    animation: pulse-ring 2.8s ease-out infinite;
+    pointer-events: none;
   }
   @keyframes pulse-ring {
-    0% { transform: scale(1); opacity: 0.6; }
-    100% { transform: scale(1.08); opacity: 0; }
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.1); opacity: 0; }
   }
+
+  .node-api .node-card { border-color: rgba(96,7,193,0.22); }
+  .node-db .node-card { border-color: rgba(16,185,129,0.28); }
+  .node-frontend .node-card { border-color: rgba(59,130,246,0.28); }
+  .node-ai .node-card { border-color: rgba(245,158,11,0.28); }
+  .node-external .node-card { border-color: rgba(156,163,175,0.35); background: #f8f8f8; }
 
   /* ── DETAIL PANEL ── */
   .detail-panel {
-    width: 460px;
+    width: 440px;
+    min-width: 440px;
     background: #fff;
     border-left: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     z-index: 20;
     overflow: hidden;
+    flex-shrink: 0;
   }
   .detail-panel.open { transform: translateX(0); }
 
   .panel-header {
     background: var(--sidebar-bg);
-    padding: 28px 32px;
+    padding: 22px 28px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -215,84 +185,45 @@
     flex-shrink: 0;
   }
   .panel-header-info { flex: 1; }
-  .panel-icon { font-size: 40px; margin-bottom: 10px; display: block; }
-  .panel-title {
-    color: #fff;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-  .panel-subtitle {
-    color: rgba(255,255,255,0.5);
-    font-size: 12px;
-    margin-top: 4px;
-  }
+  .panel-icon { font-size: 36px; margin-bottom: 8px; display: block; }
+  .panel-title { color: #fff; font-size: 20px; font-weight: 700; line-height: 1.2; }
+  .panel-subtitle { color: rgba(255,255,255,0.45); font-size: 12px; margin-top: 4px; }
   .panel-close {
-    background: rgba(255,255,255,0.1);
-    border: none;
-    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.08);
+    border: none; color: rgba(255,255,255,0.6);
     width: 32px; height: 32px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
+    border-radius: 8px; cursor: pointer;
+    font-size: 15px;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: background 0.2s;
+    flex-shrink: 0; transition: background 0.2s;
   }
-  .panel-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
+  .panel-close:hover { background: rgba(255,255,255,0.18); color: #fff; }
 
-  .panel-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 28px 32px;
-  }
+  .panel-body { flex: 1; overflow-y: auto; padding: 24px 28px; }
   .panel-body::-webkit-scrollbar { width: 4px; }
-  .panel-body::-webkit-scrollbar-track { background: transparent; }
   .panel-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-  .panel-section { margin-bottom: 28px; }
+  .panel-section { margin-bottom: 22px; }
   .panel-section-title {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
+    font-size: 10px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 10px; padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
   }
 
   .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 11px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.04);
-    gap: 12px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.04); gap: 12px;
   }
   .info-row:last-child { border-bottom: none; }
-  .info-key {
-    font-size: 13px;
-    color: var(--text-muted);
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-  .info-val {
-    font-size: 13px;
-    color: var(--text);
-    font-weight: 600;
-    text-align: right;
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .info-key { font-size: 12.5px; color: var(--text-muted); font-weight: 500; flex-shrink: 0; }
+  .info-val { font-size: 12.5px; color: var(--text); font-weight: 600; text-align: right; font-family: 'JetBrains Mono', monospace; }
 
   .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag {
-    background: var(--tag-bg);
-    color: var(--primary);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 20px;
+    background: var(--tag-bg); color: var(--primary);
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
     border: 1px solid rgba(85,19,136,0.12);
     font-family: 'JetBrains Mono', monospace;
   }
@@ -302,168 +233,111 @@
   .tag.gray { background: rgba(107,114,128,0.08); color: #4b5563; border-color: rgba(107,114,128,0.2); }
 
   .code-block {
-    background: #0f0720;
-    border-radius: 8px;
-    padding: 18px 20px;
+    background: #0f0720; border-radius: 8px;
+    padding: 14px 16px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px;
-    color: #c084fc;
-    line-height: 1.6;
-    overflow-x: auto;
-    border: 1px solid rgba(139,47,201,0.2);
+    font-size: 12px; color: #c084fc; line-height: 1.65;
+    overflow-x: auto; border: 1px solid rgba(139,47,201,0.2);
   }
   .code-block .kw { color: #818cf8; }
   .code-block .str { color: #86efac; }
   .code-block .fn { color: #fbbf24; }
-  .code-block .cm { color: rgba(255,255,255,0.3); }
+  .code-block .cm { color: rgba(255,255,255,0.28); }
 
-  .metric-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .metric-card {
-    background: var(--tag-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 14px;
-    text-align: center;
+    background: var(--tag-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 10px; text-align: center;
   }
-  .metric-val {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--accent);
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .metric-label {
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    font-weight: 500;
-  }
+  .metric-val { font-size: 24px; font-weight: 800; color: var(--accent); display: block; font-family: 'JetBrains Mono', monospace; }
+  .metric-label { font-size: 10px; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
 
-  .flow-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-  }
+  .flow-step { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
   .flow-step:last-child { border-bottom: none; }
   .flow-num {
     width: 22px; height: 22px;
     background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: #fff;
-    border-radius: 50%;
-    font-size: 11px;
-    font-weight: 700;
+    color: #fff; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
+    flex-shrink: 0; margin-top: 1px;
   }
-  .flow-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+  .flow-text { font-size: 12.5px; color: var(--text); line-height: 1.5; }
   .flow-text strong { color: var(--accent); }
 
   /* ── LEGEND ── */
   .legend {
     position: absolute;
-    bottom: 24px;
-    left: 24px;
+    bottom: 20px; right: 20px;
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 16px 20px;
+    padding: 14px 18px;
     z-index: 10;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: flex; flex-direction: column; gap: 7px;
   }
   .legend-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
-  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-muted); }
-  .legend-dot { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
+  .legend-item { display: flex; align-items: center; gap: 9px; font-size: 11.5px; color: var(--text-muted); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
-  /* ── HINT ── */
-  .hint {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(26,10,46,0.85);
-    backdrop-filter: blur(8px);
-    color: rgba(255,255,255,0.7);
-    font-size: 12px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid rgba(139,47,201,0.3);
-    pointer-events: none;
-    z-index: 5;
-    white-space: nowrap;
-    transition: opacity 0.5s;
+  /* ── CONN LABELS ── */
+  .conn-label { font-size: 10px; fill: #888; font-family: 'Inter', sans-serif; font-weight: 500; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; gap: 12px; padding: 40px;
+    text-align: center;
   }
-  .hint.hidden { opacity: 0; }
+  .empty-state .icon { font-size: 48px; opacity: 0.3; }
+  .empty-state p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
-  /* ── CONNECTION LABELS ── */
-  .conn-label {
-    font-size: 10px;
-    fill: var(--text-muted);
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    .detail-panel { width: 100%; position: absolute; top: 0; right: 0; bottom: 0; }
+  @media (max-width: 900px) {
+    .detail-panel { width: 100%; min-width: 100%; position: absolute; top: 0; right: 0; bottom: 0; }
     .legend { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
   <div class="header-logo">
     <div class="dot"></div>
     <span>Porti Negócios <small>v8.2</small></span>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <span style="font-size:12px;color:rgba(255,255,255,0.4);">Clique em qualquer componente para explorar</span>
+  <div class="header-right">
+    <span class="header-hint">Clique em qualquer componente para explorar</span>
     <span class="header-badge">Arquitetura Interativa</span>
   </div>
 </header>
 
-<!-- MAIN -->
 <div class="main">
 
   <!-- CANVAS -->
   <div class="canvas" id="canvas">
 
-    <!-- Hint -->
-    <div class="hint" id="hint">👆 Clique em qualquer nó para ver os detalhes</div>
-
-    <!-- SVG Connections -->
     <svg class="connections-svg" id="connections">
       <defs>
-        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="rgba(96,7,193,0.4)"/>
+        <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="rgba(96,7,193,0.4)"/>
         </marker>
-        <marker id="arrow-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="rgba(156,163,175,0.5)"/>
+        <marker id="arr-gray" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="rgba(156,163,175,0.5)"/>
         </marker>
-        <marker id="arrow-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="rgba(16,185,129,0.5)"/>
+        <marker id="arr-green" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="rgba(16,185,129,0.5)"/>
         </marker>
-        <marker id="arrow-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="rgba(245,158,11,0.5)"/>
+        <marker id="arr-amber" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="rgba(245,158,11,0.5)"/>
         </marker>
       </defs>
     </svg>
 
-    <!-- ── NODES ── -->
+    <!-- ── NODES (positions set by JS based on canvas size) ── -->
 
-    <!-- CORE: Porti Negócios Server -->
-    <div class="node node-core" id="node-server" style="left:50%;top:48%;transform:translate(-50%,-50%);" onclick="showDetail('server')">
+    <!-- CORE -->
+    <div class="node node-core" id="node-server" onclick="showDetail('server')">
       <div class="node-card">
         <span class="node-icon">⚡</span>
         <span class="node-label">Porti Negócios</span>
@@ -472,7 +346,7 @@
     </div>
 
     <!-- FRONTEND -->
-    <div class="node node-frontend" id="node-frontend" style="left:10%;top:48%;transform:translateY(-50%);" onclick="showDetail('frontend')">
+    <div class="node node-frontend" id="node-frontend" onclick="showDetail('frontend')">
       <div class="node-card">
         <span class="node-icon">🖥️</span>
         <span class="node-label">Frontend</span>
@@ -481,7 +355,7 @@
     </div>
 
     <!-- DATABASE -->
-    <div class="node node-db" id="node-db" style="left:38%;top:80%;transform:translateX(-50%);" onclick="showDetail('db')">
+    <div class="node node-db" id="node-db" onclick="showDetail('db')">
       <div class="node-card">
         <span class="node-icon">🗄️</span>
         <span class="node-label">MySQL / TiDB</span>
@@ -490,7 +364,7 @@
     </div>
 
     <!-- AUTH -->
-    <div class="node node-api" id="node-auth" style="left:50%;top:9%;transform:translateX(-50%);" onclick="showDetail('auth')">
+    <div class="node node-api" id="node-auth" onclick="showDetail('auth')">
       <div class="node-card">
         <span class="node-icon">🔐</span>
         <span class="node-label">Auth & API Keys</span>
@@ -498,8 +372,8 @@
       </div>
     </div>
 
-    <!-- SYNC SERVICE -->
-    <div class="node node-api" id="node-sync" style="left:24%;top:18%;transform:translateX(-50%);" onclick="showDetail('sync')">
+    <!-- SYNC -->
+    <div class="node node-api" id="node-sync" onclick="showDetail('sync')">
       <div class="node-card">
         <span class="node-icon">🔄</span>
         <span class="node-label">Sync Service</span>
@@ -507,8 +381,8 @@
       </div>
     </div>
 
-    <!-- AI LAYER -->
-    <div class="node node-ai" id="node-ai" style="left:74%;top:18%;transform:translateX(-50%);" onclick="showDetail('ai')">
+    <!-- AI -->
+    <div class="node node-ai" id="node-ai" onclick="showDetail('ai')">
       <div class="node-card">
         <span class="node-icon">🧠</span>
         <span class="node-label">IA Avançada</span>
@@ -516,8 +390,8 @@
       </div>
     </div>
 
-    <!-- API REST v1 -->
-    <div class="node node-api" id="node-apiv1" style="left:88%;top:48%;transform:translateY(-50%);" onclick="showDetail('apiv1')">
+    <!-- API REST -->
+    <div class="node node-api" id="node-apiv1" onclick="showDetail('apiv1')">
       <div class="node-card">
         <span class="node-icon">🌐</span>
         <span class="node-label">API REST v1</span>
@@ -526,7 +400,7 @@
     </div>
 
     <!-- EXTERNAL: Porti API -->
-    <div class="node node-external" id="node-porti" style="left:10%;top:10%;transform:translateX(-50%);" onclick="showDetail('porti')">
+    <div class="node node-external" id="node-porti" onclick="showDetail('porti')">
       <div class="node-card">
         <span class="node-icon">💊</span>
         <span class="node-label">Porti API</span>
@@ -535,7 +409,7 @@
     </div>
 
     <!-- EXTERNAL: Motor API -->
-    <div class="node node-external" id="node-motor" style="left:8%;top:26%;transform:translateX(-50%);" onclick="showDetail('motor')">
+    <div class="node node-external" id="node-motor" onclick="showDetail('motor')">
       <div class="node-card">
         <span class="node-icon">⚙️</span>
         <span class="node-label">Motor API</span>
@@ -544,7 +418,7 @@
     </div>
 
     <!-- EXTERNAL: Finance API -->
-    <div class="node node-external" id="node-finance" style="left:8%;top:68%;transform:translateX(-50%);" onclick="showDetail('finance')">
+    <div class="node node-external" id="node-finance" onclick="showDetail('finance')">
       <div class="node-card">
         <span class="node-icon">💰</span>
         <span class="node-label">Finance API</span>
@@ -553,7 +427,7 @@
     </div>
 
     <!-- EXTERNAL: Medescomplica -->
-    <div class="node node-external" id="node-mdc" style="left:22%;top:88%;transform:translateX(-50%);" onclick="showDetail('mdc')">
+    <div class="node node-external" id="node-mdc" onclick="showDetail('mdc')">
       <div class="node-card">
         <span class="node-icon">📋</span>
         <span class="node-label">Medescomplica</span>
@@ -562,7 +436,7 @@
     </div>
 
     <!-- EXTERNAL: WhatsApp -->
-    <div class="node node-external" id="node-whatsapp" style="left:86%;top:78%;transform:translateX(-50%);" onclick="showDetail('whatsapp')">
+    <div class="node node-external" id="node-whatsapp" onclick="showDetail('whatsapp')">
       <div class="node-card">
         <span class="node-icon">💬</span>
         <span class="node-label">WhatsApp Flow</span>
@@ -571,7 +445,7 @@
     </div>
 
     <!-- STORAGE -->
-    <div class="node node-db" id="node-storage" style="left:64%;top:80%;transform:translateX(-50%);" onclick="showDetail('storage')">
+    <div class="node node-db" id="node-storage" onclick="showDetail('storage')">
       <div class="node-card">
         <span class="node-icon">☁️</span>
         <span class="node-label">S3 Storage</span>
@@ -579,12 +453,12 @@
       </div>
     </div>
 
-    <!-- LEGEND -->
+    <!-- LEGEND (bottom-right) -->
     <div class="legend">
       <div class="legend-title">Legenda</div>
       <div class="legend-item"><div class="legend-dot" style="background:#1A0A2E;"></div>Core Server</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(96,7,193,0.3);border:1px solid rgba(96,7,193,0.5)"></div>Serviços internos</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4)"></div>Banco de dados</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(96,7,193,0.25);border:1px solid rgba(96,7,193,0.5)"></div>Serviços internos</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4)"></div>Banco / Storage</div>
       <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4)"></div>Camada IA</div>
       <div class="legend-item"><div class="legend-dot" style="background:#f3f4f6;border:1px solid #d1d5db"></div>APIs externas</div>
     </div>
@@ -601,91 +475,180 @@
       </div>
       <button class="panel-close" onclick="closePanel()">✕</button>
     </div>
-    <div class="panel-body" id="panelBody"></div>
+    <div class="panel-body" id="panelBody">
+      <div class="empty-state">
+        <div class="icon">👆</div>
+        <p>Clique em qualquer componente no diagrama para ver os detalhes técnicos completos.</p>
+      </div>
+    </div>
   </div>
 
 </div><!-- /main -->
 
 <script>
-// ── DATA ──
+// ────────────────────────────────────────────────
+// LAYOUT ENGINE — positions nodes based on canvas size
+// ────────────────────────────────────────────────
+function layoutNodes() {
+  const canvas = document.getElementById('canvas');
+  const W = canvas.offsetWidth;
+  const H = canvas.offsetHeight;
+
+  // Node width/height estimates
+  const NW = 148; // regular node width
+  const NH = 100; // regular node height
+  const CW = 178; // core node width
+  const CH = 120; // core node height
+
+  // Center
+  const cx = W / 2;
+  const cy = H / 2;
+
+  // Layout: radial-ish with clear zones
+  // Core: center
+  // Internal ring (Auth top, Frontend left, DB bottom, API REST right)
+  // Service ring (Sync top-left, AI top-right)
+  // External ring (Porti, Motor, Finance, Mdc on left; WhatsApp on right)
+  // Storage bottom-right
+
+  const positions = {
+    'node-server':   { x: cx - CW/2,          y: cy - CH/2 },
+    'node-auth':     { x: cx - NW/2,           y: 28 },
+    'node-frontend': { x: 28,                  y: cy - NH/2 },
+    'node-db':       { x: cx - NW/2,           y: H - NH - 28 },
+    'node-apiv1':    { x: W - NW - 28,         y: cy - NH/2 },
+    'node-sync':     { x: cx - NW - 60,        y: 28 + NH + 16 },
+    'node-ai':       { x: cx + 60,             y: 28 + NH + 16 },
+    'node-porti':    { x: 28,                  y: 28 },
+    'node-motor':    { x: 28,                  y: 28 + NH + 16 },
+    'node-finance':  { x: 28,                  y: H - NH*2 - 44 },
+    'node-mdc':      { x: 28,                  y: H - NH - 28 },
+    'node-whatsapp': { x: W - NW - 28,         y: H - NH - 28 },
+    'node-storage':  { x: W - NW - 28,         y: 28 },
+  };
+
+  // Apply positions
+  Object.entries(positions).forEach(([id, pos]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.left = Math.round(pos.x) + 'px';
+    el.style.top  = Math.round(pos.y) + 'px';
+    el.style.transform = 'none';
+  });
+
+  // Draw connections after positioning
+  drawConnections(positions, NW, NH, CW, CH);
+}
+
+// ────────────────────────────────────────────────
+// CONNECTION DRAWING
+// ────────────────────────────────────────────────
+function center(pos, w, h) {
+  return { x: pos.x + w/2, y: pos.y + h/2 };
+}
+
+function drawConnections(pos, NW, NH, CW, CH) {
+  const svg = document.getElementById('connections');
+  svg.innerHTML = `<defs>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(96,7,193,0.4)"/></marker>
+    <marker id="arr-gray" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(156,163,175,0.5)"/></marker>
+    <marker id="arr-green" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(16,185,129,0.5)"/></marker>
+    <marker id="arr-amber" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(245,158,11,0.5)"/></marker>
+  </defs>`;
+
+  const c = (id, w, h) => center(pos[id], w || NW, h || NH);
+  const cw = CW, ch = CH;
+
+  const lines = [
+    // Internal connections (purple)
+    { from: c('node-server',cw,ch), to: c('node-frontend'), color: 'rgba(96,7,193,0.35)', dash: '0', marker: 'arr', label: 'tRPC' },
+    { from: c('node-server',cw,ch), to: c('node-auth'),     color: 'rgba(96,7,193,0.35)', dash: '0', marker: 'arr', label: 'OAuth' },
+    { from: c('node-server',cw,ch), to: c('node-db'),       color: 'rgba(16,185,129,0.5)', dash: '0', marker: 'arr-green', label: 'MySQL pool' },
+    { from: c('node-server',cw,ch), to: c('node-apiv1'),    color: 'rgba(96,7,193,0.35)', dash: '0', marker: 'arr', label: 'REST' },
+    { from: c('node-server',cw,ch), to: c('node-sync'),     color: 'rgba(96,7,193,0.3)', dash: '4,3', marker: 'arr', label: '' },
+    { from: c('node-server',cw,ch), to: c('node-ai'),       color: 'rgba(245,158,11,0.4)', dash: '4,3', marker: 'arr-amber', label: 'Claude' },
+    { from: c('node-server',cw,ch), to: c('node-storage'),  color: 'rgba(16,185,129,0.4)', dash: '4,3', marker: 'arr-green', label: 'S3' },
+    // External connections (gray)
+    { from: c('node-sync'),  to: c('node-porti'),   color: 'rgba(156,163,175,0.45)', dash: '5,4', marker: 'arr-gray', label: '' },
+    { from: c('node-sync'),  to: c('node-motor'),   color: 'rgba(156,163,175,0.45)', dash: '5,4', marker: 'arr-gray', label: '' },
+    { from: c('node-sync'),  to: c('node-finance'),  color: 'rgba(156,163,175,0.45)', dash: '5,4', marker: 'arr-gray', label: '' },
+    { from: c('node-sync'),  to: c('node-mdc'),     color: 'rgba(156,163,175,0.45)', dash: '5,4', marker: 'arr-gray', label: '' },
+    { from: c('node-apiv1'), to: c('node-whatsapp'),color: 'rgba(156,163,175,0.45)', dash: '5,4', marker: 'arr-gray', label: 'Bearer' },
+    { from: c('node-ai'),    to: c('node-db'),      color: 'rgba(245,158,11,0.35)', dash: '4,3', marker: 'arr-amber', label: 'RAG docs' },
+  ];
+
+  lines.forEach(l => {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const dx = (l.to.x - l.from.x) * 0.45;
+    const d = `M${l.from.x},${l.from.y} C${l.from.x+dx},${l.from.y} ${l.to.x-dx},${l.to.y} ${l.to.x},${l.to.y}`;
+    path.setAttribute('d', d);
+    path.setAttribute('stroke', l.color);
+    path.setAttribute('stroke-width', '1.5');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke-dasharray', l.dash);
+    path.setAttribute('marker-end', `url(#${l.marker})`);
+    svg.appendChild(path);
+
+    if (l.label) {
+      const mx = (l.from.x + l.to.x) / 2;
+      const my = (l.from.y + l.to.y) / 2 - 7;
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', mx);
+      text.setAttribute('y', my);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('class', 'conn-label');
+      text.textContent = l.label;
+      svg.appendChild(text);
+    }
+  });
+}
+
+// ────────────────────────────────────────────────
+// NODE DATA
+// ────────────────────────────────────────────────
 const nodes = {
   server: {
-    icon: '⚡',
-    title: 'Porti Negócios Server',
-    subtitle: 'Express 4 + tRPC 11 · Node.js 22',
+    icon: '⚡', title: 'Porti Negócios Server', subtitle: 'Express 4 + tRPC 11 · Node.js 22',
     sections: [
-      {
-        title: 'Métricas do Sistema',
-        type: 'metrics',
-        data: [
-          { val: '12', label: 'Routers tRPC' },
-          { val: '78+', label: 'Testes Vitest' },
-          { val: '1.078', label: 'Médicos ativos' },
-          { val: '16', label: 'Tabelas MySQL' },
-        ]
-      },
-      {
-        title: 'Stack Principal',
-        type: 'tags',
-        data: ['React 19', 'Express 4', 'tRPC 11', 'TypeScript', 'Tailwind 4', 'Drizzle ORM', 'Vitest', 'Superjson']
-      },
-      {
-        title: 'Routers tRPC',
-        type: 'rows',
-        data: [
-          { key: 'auth', val: 'me · logout · register' },
-          { key: 'medicos', val: 'list · search · perfilCompleto' },
-          { key: 'sync', val: 'triggerSync · syncStatus' },
-          { key: 'ia', val: 'chat · streamChat' },
-          { key: 'iaAnalise', val: 'textToSql · queryHybrid · uploadDoc' },
-          { key: 'finance', val: 'contratos · antecipacoes' },
-          { key: 'plantoes', val: 'list · byMedico · stats' },
-        ]
-      },
-      {
-        title: 'Arquitetura de Pastas',
-        type: 'code',
-        data: `server/
+      { title: 'Métricas do Sistema', type: 'metrics', data: [
+        { val: '12', label: 'Routers tRPC' },
+        { val: '78+', label: 'Testes Vitest' },
+        { val: '1.078', label: 'Médicos ativos' },
+        { val: '16', label: 'Tabelas MySQL' },
+      ]},
+      { title: 'Stack Principal', type: 'tags', data: ['React 19', 'Express 4', 'tRPC 11', 'TypeScript 5', 'Tailwind 4', 'Drizzle ORM', 'Vitest', 'Superjson'] },
+      { title: 'Routers tRPC', type: 'rows', data: [
+        { key: 'auth', val: 'me · logout · register' },
+        { key: 'medicos', val: 'list · search · perfilCompleto' },
+        { key: 'sync', val: 'triggerSync · syncStatus' },
+        { key: 'ia', val: 'chat · streamChat' },
+        { key: 'iaAnalise', val: 'textToSql · queryHybrid · uploadDoc' },
+        { key: 'finance', val: 'contratos · antecipacoes' },
+        { key: 'plantoes', val: 'list · byMedico · stats' },
+      ]},
+      { title: 'Estrutura de Pastas', type: 'code', data: `server/
 ├── <kw>_core/</kw>       <cm>← infra (OAuth, LLM, env)</cm>
 ├── <kw>routers/</kw>     <cm>← 12 routers tRPC</cm>
 ├── <kw>services/</kw>    <cm>← syncService, embeddings</cm>
 ├── <kw>api/</kw>         <cm>← v1.ts, middleware.ts</cm>
-└── <kw>mysql-client.ts</kw> <cm>← pool singleton</cm>`
-      }
+└── <kw>mysql-client.ts</kw> <cm>← pool singleton</cm>` }
     ]
   },
 
   frontend: {
-    icon: '🖥️',
-    title: 'Frontend React',
-    subtitle: 'React 19 · Vite · Tailwind 4 · shadcn/ui',
+    icon: '🖥️', title: 'Frontend React', subtitle: 'React 19 · Vite · Tailwind 4 · shadcn/ui',
     sections: [
-      {
-        title: 'Páginas (22 no total)',
-        type: 'tags',
-        data: ['Dashboard', 'Médicos', 'Plantões', 'Contratos', 'Relatórios', 'Produtos', 'Completude', 'IA Chat', 'IA Avançada', 'Login', 'Configurações', '+ 11 mais']
-      },
-      {
-        title: 'Design System Portí',
-        type: 'rows',
-        data: [
-          { key: 'Primary', val: '#551388' },
-          { key: 'Accent', val: '#6007C1' },
-          { key: 'Sidebar', val: '#1A0A2E' },
-          { key: 'Background', val: '#F7F4EF' },
-          { key: 'Text', val: '#111111' },
-          { key: 'Fonte', val: 'Inter + JetBrains Mono' },
-        ]
-      },
-      {
-        title: 'Componentes Principais',
-        type: 'tags',
-        data: ['PortiLayout', 'MedicoDrawer', 'AIChatBox', 'SyncStatusBadge', 'SyncIndicator', 'BlueprintBackground', 'DashboardLayout']
-      },
-      {
-        title: 'Padrão de Consumo de Dados',
-        type: 'code',
-        data: `<cm>// Leitura via tRPC</cm>
+      { title: 'Páginas (22 no total)', type: 'tags', data: ['Dashboard', 'Médicos', 'Plantões', 'Contratos', 'Relatórios', 'Produtos', 'Completude', 'IA Chat', 'IA Avançada', 'Login', 'Configurações', '+ 11 mais'] },
+      { title: 'Design System Portí', type: 'rows', data: [
+        { key: 'Primary', val: '#551388' },
+        { key: 'Accent', val: '#6007C1' },
+        { key: 'Sidebar', val: '#1A0A2E' },
+        { key: 'Background', val: '#F7F4EF' },
+        { key: 'Text', val: '#111111' },
+        { key: 'Fonte', val: 'Inter + JetBrains Mono' },
+      ]},
+      { title: 'Componentes Principais', type: 'tags', data: ['PortiLayout', 'MedicoDrawer', 'AIChatBox', 'SyncStatusBadge', 'SyncIndicator', 'BlueprintBackground'] },
+      { title: 'Padrão de Consumo', type: 'code', data: `<cm>// Leitura via tRPC</cm>
 <kw>const</kw> { data } = <fn>trpc.medicos.list.useQuery</fn>({
   page: <str>1</str>, search: <str>""</str>
 });
@@ -693,576 +656,273 @@ const nodes = {
 <cm>// Mutação com invalidação</cm>
 <kw>const</kw> sync = <fn>trpc.sync.triggerSync.useMutation</fn>({
   onSuccess: () => utils.<fn>invalidate</fn>()
-});`
-      }
+});` }
     ]
   },
 
   db: {
-    icon: '🗄️',
-    title: 'MySQL / TiDB',
-    subtitle: 'Banco principal · 16 tabelas · pool singleton',
+    icon: '🗄️', title: 'MySQL / TiDB', subtitle: 'TiDB Serverless · 16 tabelas · pool de 10 conexões',
     sections: [
-      {
-        title: 'Tabelas de Cache (Sync)',
-        type: 'tags',
-        data: ['cached_medicos', 'cached_plantoes', 'cached_contratos', 'cached_antecipacoes', 'cached_relatorios', 'cached_produtos', 'cached_finance_contratos', 'cached_finance_antecipacoes', 'cached_mdc_medicos', 'cached_mdc_nfs']
-      },
-      {
-        title: 'Tabelas do Sistema',
-        type: 'tags',
-        data: ['api_keys', 'sync_logs', 'rag_documents', 'rag_queries_log', 'users (Drizzle/Supabase)']
-      },
-      {
-        title: 'Schema: cached_medicos',
-        type: 'code',
-        data: `<kw>CREATE TABLE</kw> cached_medicos (
-  id         <str>INT AUTO_INCREMENT PRIMARY KEY</str>,
-  cpf        <str>VARCHAR(11) UNIQUE NOT NULL</str>,
-  nome       <str>TEXT</str>,
-  crm        <str>VARCHAR(20)</str>,
-  pix        <str>VARCHAR(100)</str>,
-  status     <str>VARCHAR(20)</str>,
-  fontes     <str>JSON</str>,  <cm>← merge de 4 APIs</cm>
-  extras     <str>JSON</str>,
-  syncedAt   <str>DATETIME DEFAULT NOW()</str>
-);`
-      },
-      {
-        title: 'Estratégia de Upsert',
-        type: 'flow',
-        data: [
-          { num: '1', text: 'Fetch paralelo das 4 APIs externas' },
-          { num: '2', text: 'Normalização do CPF (11 dígitos, zero-padded)' },
-          { num: '3', text: '<strong>INSERT ON DUPLICATE KEY UPDATE</strong> — atômico' },
-          { num: '4', text: 'Campo <strong>fontes[]</strong> consolida todas as origens por CPF' },
-          { num: '5', text: 'syncedAt atualizado a cada ciclo' },
-        ]
-      }
+      { title: 'Tabelas de Cache (Sync)', type: 'tags', data: ['cached_medicos', 'cached_plantoes', 'cached_antecipacoes', 'cached_contratos', 'cached_relatorios', 'cached_produtos', 'cached_completude', 'sync_logs'] },
+      { title: 'Tabelas de Sistema', type: 'tags', data: ['users', 'sessions', 'api_keys', 'rag_documents', 'rag_queries_log', 'system_settings', 'audit_logs', 'notifications'] },
+      { title: 'Schema: cached_medicos', type: 'code', data: `<kw>CREATE TABLE</kw> cached_medicos (
+  id          <str>INT AUTO_INCREMENT</str>,
+  medico_id   <str>VARCHAR(50)</str>,
+  nome        <str>VARCHAR(200)</str>,
+  cpf         <str>VARCHAR(14)</str>,
+  crm         <str>VARCHAR(20)</str>,
+  status      <str>ENUM('ativo','inativo')</str>,
+  pix_key     <str>TEXT</str>,
+  raw_data    <str>JSON</str>,
+  updated_at  <str>TIMESTAMP</str>
+);` }
     ]
   },
 
   auth: {
-    icon: '🔐',
-    title: 'Autenticação & Autorização',
-    subtitle: 'Manus OAuth 2.0 + Bearer Token (API Keys)',
+    icon: '🔐', title: 'Auth & API Keys', subtitle: 'Manus OAuth 2.0 + Bearer token (SHA-256)',
     sections: [
-      {
-        title: 'Dois Mecanismos Paralelos',
-        type: 'rows',
-        data: [
-          { key: 'Sessão Web', val: 'Manus OAuth 2.0' },
-          { key: 'API Pública', val: 'Bearer Token (SHA-256)' },
-          { key: 'Cookie', val: 'HttpOnly · Signed JWT' },
-          { key: 'Hash', val: 'crypto.createHash("sha256")' },
-          { key: 'Scopes', val: 'medicos · plantoes · contratos · sync' },
-        ]
-      },
-      {
-        title: 'Fluxo OAuth (Web)',
-        type: 'flow',
-        data: [
-          { num: '1', text: 'Frontend chama <strong>getLoginUrl()</strong> com origin' },
-          { num: '2', text: 'Redirect para Manus OAuth portal' },
-          { num: '3', text: 'Callback em <strong>/api/oauth/callback</strong>' },
-          { num: '4', text: 'JWT assinado salvo em cookie HttpOnly' },
-          { num: '5', text: '<strong>ctx.user</strong> disponível em protectedProcedure' },
-        ]
-      },
-      {
-        title: 'Validação de API Key',
-        type: 'code',
-        data: `<cm>// middleware.ts</cm>
-<kw>const</kw> hash = crypto
-  .<fn>createHash</fn>(<str>"sha256"</str>)
-  .<fn>update</fn>(rawKey)
-  .<fn>digest</fn>(<str>"hex"</str>);
-
-<kw>const</kw> [row] = <kw>await</kw> pool.<fn>execute</fn>(
-  <str>"SELECT * FROM api_keys WHERE keyHash=? AND active=1"</str>,
-  [hash]
-);`
-      },
-      {
-        title: 'Scopes por Chave',
-        type: 'tags',
-        data: ['medicos', 'plantoes', 'antecipacoes', 'contratos', 'relatorios', 'produtos', 'sync']
-      }
+      { title: 'Fluxo OAuth (Usuários Web)', type: 'flow', data: [
+        { text: '<strong>Frontend</strong> chama <strong>getLoginUrl()</strong> com origin codificado no state' },
+        { text: '<strong>Manus OAuth</strong> autentica e redireciona para <strong>/api/oauth/callback</strong>' },
+        { text: '<strong>Backend</strong> valida code, cria sessão JWT e seta cookie HttpOnly' },
+        { text: '<strong>ctx.user</strong> disponível em todas as <strong>protectedProcedures</strong>' },
+      ]},
+      { title: 'Autenticação API v1 (Bearer)', type: 'flow', data: [
+        { text: 'Header <strong>Authorization: Bearer pk_live_...</strong>' },
+        { text: 'Middleware calcula <strong>SHA-256</strong> da chave recebida' },
+        { text: 'Compara com <strong>keyHash</strong> na tabela <strong>api_keys</strong>' },
+        { text: 'Valida <strong>status=active</strong> e <strong>scopes[]</strong> permitidos' },
+      ]},
+      { title: 'Scopes Disponíveis', type: 'tags', data: ['medicos', 'plantoes', 'antecipacoes', 'contratos', 'relatorios', 'produtos', 'sync', 'admin'] },
     ]
   },
 
   sync: {
-    icon: '🔄',
-    title: 'Sync Service',
-    subtitle: 'syncService.ts · 787 linhas · 4 fontes externas',
+    icon: '🔄', title: 'Sync Service', subtitle: '787 linhas · cron a cada 30 min · 4 fontes externas',
     sections: [
-      {
-        title: 'Pipeline de Sincronização',
-        type: 'flow',
-        data: [
-          { num: '1', text: '<strong>Fetch paralelo</strong> das 4 APIs com Promise.allSettled' },
-          { num: '2', text: 'Normalização: CPF 11 dígitos, datas UTC, status lowercase' },
-          { num: '3', text: 'Merge por CPF: campo <strong>fontes[]</strong> consolida todas as origens' },
-          { num: '4', text: 'Upsert atômico no MySQL via <strong>INSERT ON DUPLICATE KEY UPDATE</strong>' },
-          { num: '5', text: 'Log em <strong>sync_logs</strong> com duração, contagem e erros' },
-        ]
-      },
-      {
-        title: 'Fontes Sincronizadas',
-        type: 'rows',
-        data: [
-          { key: 'Porti API', val: 'médicos, CRM, PIX, status' },
-          { key: 'Motor API', val: 'escalas, plantões, hospitais' },
-          { key: 'Finance API', val: 'contratos, antecipações' },
-          { key: 'Medescomplica', val: 'NFs, produtos, adesões' },
-        ]
-      },
-      {
-        title: 'Funções Principais',
-        type: 'tags',
-        data: ['syncMedicos()', 'syncPlantoes()', 'syncContratos()', 'syncAntecipacoes()', 'syncRelatorios()', 'syncProdutos()', 'syncAll()']
-      },
-      {
-        title: 'Estrutura fontes[] (JSON)',
-        type: 'code',
-        data: `[
-  { <str>"source"</str>: <str>"porti"</str>, <str>"cpf"</str>: <str>"12345..."</str>,
-    <str>"crm"</str>: <str>"SP-123456"</str>, <str>"pix"</str>: <str>"..."</str> },
-  { <str>"source"</str>: <str>"motor"</str>, <str>"cpf"</str>: <str>"12345..."</str>,
-    <str>"escalaId"</str>: <str>4821</str>, <str>"hospital"</str>: <str>"..."</str> },
-  { <str>"source"</str>: <str>"finance"</str>, <str>"cpf"</str>: <str>"12345..."</str>,
-    <str>"contratoId"</str>: <str>"C-001"</str> }
-]`
-      }
+      { title: 'Pipeline de Sincronização', type: 'flow', data: [
+        { text: '<strong>Trigger</strong>: cron automático ou manual via <strong>trpc.sync.triggerSync</strong>' },
+        { text: '<strong>Fetch paralelo</strong> das 4 APIs externas com timeout de 30s cada' },
+        { text: '<strong>Normalização</strong>: transforma JSON bruto no schema interno' },
+        { text: '<strong>Upsert</strong>: INSERT ... ON DUPLICATE KEY UPDATE em batch de 100' },
+        { text: '<strong>Log</strong>: registra duração, registros atualizados e erros em <strong>sync_logs</strong>' },
+      ]},
+      { title: 'Fontes de Dados', type: 'rows', data: [
+        { key: 'Porti API', val: 'médicos, CRM, PIX, status' },
+        { key: 'Motor API', val: 'escalas, plantões, hospitais' },
+        { key: 'Finance API', val: 'contratos, antecipações' },
+        { key: 'Medescomplica', val: 'NFs, produtos, completude' },
+      ]},
+      { title: 'Configuração', type: 'rows', data: [
+        { key: 'Intervalo', val: '30 min (cron)' },
+        { key: 'Timeout por fonte', val: '30s' },
+        { key: 'Batch size', val: '100 registros' },
+        { key: 'Retry', val: '3x com backoff' },
+      ]},
     ]
   },
 
   ai: {
-    icon: '🧠',
-    title: 'Camada IA Avançada',
-    subtitle: 'Text-to-SQL + RAG · Claude 3 · Embeddings',
+    icon: '🧠', title: 'IA Avançada', subtitle: 'Text-to-SQL + RAG de documentos · Claude 3.5',
     sections: [
-      {
-        title: 'Dois Modos de IA',
-        type: 'rows',
-        data: [
-          { key: 'Text-to-SQL', val: 'Pergunta → SQL → Resultado' },
-          { key: 'RAG', val: 'Pergunta → Busca semântica → Resposta' },
-          { key: 'Modelo', val: 'Claude 3 (Anthropic)' },
-          { key: 'Embeddings', val: 'Anthropic + fallback TF-IDF' },
-          { key: 'Similaridade', val: 'Coseno (vetor 1536d)' },
-          { key: 'Tabelas RAG', val: 'rag_documents · rag_queries_log' },
-        ]
-      },
-      {
-        title: 'Text-to-SQL — Fluxo',
-        type: 'flow',
-        data: [
-          { num: '1', text: 'Usuário digita pergunta em linguagem natural' },
-          { num: '2', text: 'Claude recebe o <strong>schema das tabelas de cache</strong>' },
-          { num: '3', text: 'Claude gera SQL SELECT (sanitizado por <strong>isSqlSafe()</strong>)' },
-          { num: '4', text: 'Query executada no MySQL com <strong>getMysqlPool()</strong>' },
-          { num: '5', text: 'Resultado retornado como tabela + SQL exibido ao usuário' },
-        ]
-      },
-      {
-        title: 'RAG — Fluxo',
-        type: 'flow',
-        data: [
-          { num: '1', text: 'Upload de PDF/TXT/MD/CSV via <strong>/api/rag/upload</strong>' },
-          { num: '2', text: 'Chunking em blocos de 500 tokens com overlap de 50' },
-          { num: '3', text: 'Embedding gerado por chunk e salvo em <strong>rag_documents</strong>' },
-          { num: '4', text: 'Busca por similaridade coseno entre query e chunks' },
-          { num: '5', text: 'Top-K chunks enviados como contexto ao Claude para resposta' },
-        ]
-      },
-      {
-        title: 'Segurança SQL',
-        type: 'code',
-        data: `<cm>// textToSql.ts — isSqlSafe()</cm>
-<kw>const</kw> BLOCKED = [
-  <str>/DROP|DELETE|UPDATE|INSERT/i</str>,
-  <str>/--|\\/\\*/</str>,   <cm>← SQL injection</cm>
-  <str>/UNION.*SELECT/i</str>
-];
-<kw>if</kw> (BLOCKED.<fn>some</fn>(r => r.<fn>test</fn>(sql)))
-  <kw>throw new</kw> Error(<str>"Query não permitida"</str>);`
-      }
+      { title: 'Camada Text-to-SQL', type: 'flow', data: [
+        { text: 'Usuário faz pergunta em linguagem natural' },
+        { text: '<strong>Claude</strong> recebe schema das tabelas de cache + pergunta' },
+        { text: 'Modelo gera <strong>SQL SELECT</strong> seguro (isSqlSafe() valida)' },
+        { text: 'Query executada no MySQL e resultado retornado formatado' },
+      ]},
+      { title: 'Camada RAG', type: 'flow', data: [
+        { text: 'Upload de PDF/TXT/MD/CSV via <strong>POST /api/rag/upload</strong>' },
+        { text: '<strong>Chunking</strong>: texto dividido em blocos de 800 chars com overlap' },
+        { text: '<strong>Embeddings</strong>: vetores gerados via Anthropic (fallback TF-IDF)' },
+        { text: '<strong>Busca semântica</strong>: similaridade coseno nos chunks indexados' },
+        { text: '<strong>Resposta</strong>: Claude responde com contexto dos chunks relevantes' },
+      ]},
+      { title: 'Procedures iaAnalise', type: 'tags', data: ['textToSql', 'uploadDocument', 'searchDocs', 'listDocs', 'deleteDoc', 'queryHybrid', 'stats', 'queryHistory'] },
     ]
   },
 
   apiv1: {
-    icon: '🌐',
-    title: 'API REST v1',
-    subtitle: 'Express Router · Bearer Auth · 10 endpoints',
+    icon: '🌐', title: 'API REST v1', subtitle: '10 endpoints · Bearer token · rate limiting',
     sections: [
-      {
-        title: 'Endpoints Disponíveis',
-        type: 'rows',
-        data: [
-          { key: 'GET /health', val: 'público · status do servidor' },
-          { key: 'GET /medicos', val: 'lista paginada · filtros' },
-          { key: 'GET /medicos/:cpf', val: 'perfil individual' },
-          { key: 'GET /medicos/:cpf/perfil-completo', val: 'JOIN 4 tabelas' },
-          { key: 'GET /plantoes', val: 'lista · filtro por hospital' },
-          { key: 'GET /contratos', val: 'lista · filtro por status' },
-          { key: 'GET /antecipacoes', val: 'lista · filtro por período' },
-          { key: 'GET /relatorios', val: 'lista de relatórios' },
-          { key: 'GET /produtos', val: 'produtos e adesões' },
-          { key: 'POST /sync', val: 'trigger manual de sync' },
-        ]
-      },
-      {
-        title: 'Autenticação',
-        type: 'code',
-        data: `<cm># Header obrigatório (exceto /health)</cm>
-Authorization: Bearer pk_live_<str>...</str>
-
-<cm># Exemplo curl</cm>
+      { title: 'Endpoints', type: 'rows', data: [
+        { key: 'GET /health', val: 'público · status check' },
+        { key: 'GET /medicos', val: 'scope: medicos' },
+        { key: 'GET /medicos/:cpf', val: 'scope: medicos' },
+        { key: 'GET /medicos/:cpf/perfil-completo', val: 'scope: medicos' },
+        { key: 'GET /plantoes', val: 'scope: plantoes' },
+        { key: 'GET /antecipacoes', val: 'scope: antecipacoes' },
+        { key: 'GET /contratos', val: 'scope: contratos' },
+        { key: 'GET /relatorios', val: 'scope: relatorios' },
+        { key: 'GET /produtos', val: 'scope: produtos' },
+        { key: 'POST /sync/trigger', val: 'scope: sync' },
+      ]},
+      { title: 'Exemplo de Uso', type: 'code', data: `<cm># Buscar médico por CPF</cm>
 curl -H <str>"Authorization: Bearer pk_live_..."</str> \\
-  https://porti-dash-avdjpsei.manus.space/<fn>api/v1/medicos</fn>`
-      },
-      {
-        title: 'Rate Limiting',
-        type: 'rows',
-        data: [
-          { key: 'Janela', val: '15 minutos' },
-          { key: 'Limite', val: '100 req / janela / chave' },
-          { key: 'Header', val: 'X-RateLimit-Remaining' },
-          { key: 'Erro', val: '429 Too Many Requests' },
-        ]
-      },
-      {
-        title: 'URL de Produção',
-        type: 'tags',
-        data: ['https://porti-dash-avdjpsei.manus.space/api/v1']
-      }
+  https://porti-dash-avdjpsei.manus.space/<fn>api/v1</fn>/medicos/<str>12345678900</str>
+
+<cm># Resposta</cm>
+{
+  <str>"id"</str>: <str>"med_123"</str>,
+  <str>"nome"</str>: <str>"Dr. João Silva"</str>,
+  <str>"crm"</str>: <str>"SP-123456"</str>,
+  <str>"status"</str>: <str>"ativo"</str>
+}` }
     ]
   },
 
   porti: {
-    icon: '💊',
-    title: 'Porti API',
-    subtitle: 'API externa principal · Médicos · CRM · PIX',
+    icon: '💊', title: 'Porti API', subtitle: 'API principal · médicos, CRM, PIX, status',
     sections: [
-      {
-        title: 'Dados Fornecidos',
-        type: 'tags',
-        data: ['CPF', 'Nome completo', 'CRM', 'UF do CRM', 'Chave PIX', 'Status (ativo/inativo)', 'E-mail', 'Telefone', 'Especialidade']
-      },
-      {
-        title: 'Configuração',
-        type: 'rows',
-        data: [
-          { key: 'Base URL', val: 'PORTI_API_URL (env)' },
-          { key: 'Auth', val: 'Bearer PORTI_API_KEY' },
-          { key: 'Chave ativa', val: 'pk_live_kjXzV-0N...' },
-          { key: 'Scope', val: 'medicos · plantoes · sync' },
-        ]
-      },
-      {
-        title: 'Uso no Sistema',
-        type: 'flow',
-        data: [
-          { num: '1', text: 'syncService.ts chama <strong>GET /medicos</strong> com paginação' },
-          { num: '2', text: 'Dados normalizados e salvos em <strong>cached_medicos</strong>' },
-          { num: '3', text: 'Disponibilizados via tRPC e API REST v1' },
-        ]
-      }
+      { title: 'Dados Fornecidos', type: 'tags', data: ['Cadastro médico', 'CRM + especialidade', 'Chave PIX', 'Status ativo/inativo', 'E-mail + telefone', 'Banco preferencial'] },
+      { title: 'Configuração', type: 'rows', data: [
+        { key: 'Base URL', val: 'PORTI_API_URL (env)' },
+        { key: 'Auth', val: 'Bearer PORTI_API_KEY' },
+        { key: 'Chave ativa', val: 'pk_live_kjXzV-0N...' },
+        { key: 'Registros', val: '1.078 médicos' },
+      ]},
     ]
   },
 
   motor: {
-    icon: '⚙️',
-    title: 'Motor API',
-    subtitle: 'Escalas médicas · Plantões · Hospitais',
+    icon: '⚙️', title: 'Motor API', subtitle: 'Escalas hospitalares · plantões · hospitais',
     sections: [
-      {
-        title: 'Dados Fornecidos',
-        type: 'tags',
-        data: ['Escalas', 'Plantões por médico', 'Hospitais', 'Datas de plantão', 'Valor por plantão', 'Status de confirmação']
-      },
-      {
-        title: 'Configuração',
-        type: 'rows',
-        data: [
-          { key: 'Env', val: 'MOTOR_API_URL + MOTOR_API_KEY' },
-          { key: 'Tabela cache', val: 'cached_plantoes' },
-          { key: 'Sync', val: 'syncPlantoes() no syncService' },
-        ]
-      }
+      { title: 'Dados Fornecidos', type: 'tags', data: ['Escalas de plantão', 'Hospitais parceiros', 'Datas de plantão', 'Carga horária', 'Especialidades por hospital'] },
+      { title: 'Configuração', type: 'rows', data: [
+        { key: 'Base URL', val: 'MOTOR_API_URL (env)' },
+        { key: 'Auth', val: 'Bearer MOTOR_API_KEY' },
+        { key: 'Sync interval', val: '30 min' },
+      ]},
     ]
   },
 
   finance: {
-    icon: '💰',
-    title: 'Finance API',
-    subtitle: 'Contratos · Antecipações · Financeiro',
+    icon: '💰', title: 'Finance API', subtitle: 'Contratos · antecipações · financeiro',
     sections: [
-      {
-        title: 'Dados Fornecidos',
-        type: 'tags',
-        data: ['Contratos ativos', 'Antecipações', 'Valor antecipado', 'Taxa', 'Status do contrato', 'Vencimento', 'Histórico financeiro']
-      },
-      {
-        title: 'Configuração',
-        type: 'rows',
-        data: [
-          { key: 'Env', val: 'PORTI_FINANCE_API_URL + KEY' },
-          { key: 'Tabelas cache', val: 'cached_contratos · cached_antecipacoes · cached_finance_*' },
-          { key: 'Sync', val: 'syncContratos() + syncAntecipacoes()' },
-        ]
-      }
+      { title: 'Dados Fornecidos', type: 'tags', data: ['Contratos ativos', 'Antecipações solicitadas', 'Valores financeiros', 'Datas de vencimento', 'Status de pagamento'] },
+      { title: 'Configuração', type: 'rows', data: [
+        { key: 'Base URL', val: 'PORTI_FINANCE_API_URL' },
+        { key: 'Auth', val: 'Bearer PORTI_FINANCE_API_KEY' },
+        { key: 'Sync interval', val: '30 min' },
+      ]},
     ]
   },
 
   mdc: {
-    icon: '📋',
-    title: 'Medescomplica',
-    subtitle: 'Notas Fiscais · Produtos · Adesões',
+    icon: '📋', title: 'Medescomplica', subtitle: 'Notas fiscais · produtos · completude de cadastro',
     sections: [
-      {
-        title: 'Dados Fornecidos',
-        type: 'tags',
-        data: ['Notas Fiscais (NFs)', 'Produtos contratados', 'Status de adesão', 'Médicos cadastrados', 'Histórico de NFs']
-      },
-      {
-        title: 'Configuração',
-        type: 'rows',
-        data: [
-          { key: 'Env', val: 'MEDESCOMPLICA_API_URL + KEY' },
-          { key: 'Tabelas cache', val: 'cached_mdc_medicos · cached_mdc_nfs · cached_produtos' },
-          { key: 'Sync', val: 'syncProdutos() no syncService' },
-        ]
-      }
+      { title: 'Dados Fornecidos', type: 'tags', data: ['Notas fiscais emitidas', 'Produtos contratados', 'Score de completude', 'Documentos pendentes', 'Histórico de NFs'] },
+      { title: 'Configuração', type: 'rows', data: [
+        { key: 'Base URL', val: 'MEDESCOMPLICA_API_URL' },
+        { key: 'Auth', val: 'Bearer MEDESCOMPLICA_API_KEY' },
+        { key: 'Sync interval', val: '30 min' },
+      ]},
     ]
   },
 
   whatsapp: {
-    icon: '💬',
-    title: 'WhatsApp Flow',
-    subtitle: 'Lovable · API REST v1 · Bearer Token',
+    icon: '💬', title: 'WhatsApp Flow', subtitle: 'Lovable · Bearer token · consulta de médicos',
     sections: [
-      {
-        title: 'Integração',
-        type: 'rows',
-        data: [
-          { key: 'Plataforma', val: 'Lovable.dev' },
-          { key: 'URL consumida', val: '/api/v1/medicos/:cpf' },
-          { key: 'Auth', val: 'Bearer pk_live_kjXzV-0N...' },
-          { key: 'Scope', val: 'medicos' },
-          { key: 'Domínio', val: 'porti-dash-avdjpsei.manus.space' },
-        ]
-      },
-      {
-        title: 'Fluxo de Uso',
-        type: 'flow',
-        data: [
-          { num: '1', text: 'Usuário envia CPF no WhatsApp' },
-          { num: '2', text: 'Lovable chama <strong>GET /api/v1/medicos/{cpf}</strong>' },
-          { num: '3', text: 'Servidor valida Bearer token (SHA-256)' },
-          { num: '4', text: 'Retorna perfil completo do médico em JSON' },
-          { num: '5', text: 'Lovable formata e exibe no fluxo do WhatsApp' },
-        ]
-      }
+      { title: 'Integração', type: 'flow', data: [
+        { text: '<strong>Lovable</strong> chama <strong>GET /api/v1/medicos/:cpf</strong>' },
+        { text: 'Header <strong>Authorization: Bearer pk_live_kjXzV-0N...</strong>' },
+        { text: 'Retorna perfil completo do médico em JSON' },
+        { text: 'Lovable renderiza os dados no fluxo do WhatsApp' },
+      ]},
+      { title: 'URL de Produção', type: 'rows', data: [
+        { key: 'Base URL', val: 'porti-dash-avdjpsei.manus.space' },
+        { key: 'Endpoint', val: '/api/v1/medicos/:cpf' },
+        { key: 'Auth', val: 'Bearer pk_live_kjXzV-0N...' },
+        { key: 'Status', val: '✅ Funcionando' },
+      ]},
     ]
   },
 
   storage: {
-    icon: '☁️',
-    title: 'S3 Storage',
-    subtitle: 'Manus S3 · Documentos RAG · Uploads',
+    icon: '☁️', title: 'S3 Storage', subtitle: 'AWS S3 · documentos RAG · uploads de usuários',
     sections: [
-      {
-        title: 'Uso no Sistema',
-        type: 'rows',
-        data: [
-          { key: 'Documentos RAG', val: 'PDFs, TXTs, MDs indexados' },
-          { key: 'Helper', val: 'storagePut() / storageGet()' },
-          { key: 'Acesso', val: 'URLs públicas CDN' },
-          { key: 'Metadados', val: 'Salvos em rag_documents (MySQL)' },
-        ]
-      },
-      {
-        title: 'Padrão de Upload',
-        type: 'code',
-        data: `<cm>// server/storage.ts</cm>
-<kw>const</kw> key = <str>\`rag/\${userId}/\${filename}\`</str>;
+      { title: 'Uso Atual', type: 'tags', data: ['Documentos RAG (PDF/TXT/MD)', 'Uploads de usuários', 'Assets estáticos', 'Backups de relatórios'] },
+      { title: 'Helper de Upload', type: 'code', data: `<kw>import</kw> { storagePut } <kw>from</kw> <str>"./server/storage"</str>;
+
+<kw>const</kw> fileKey = <str>\`rag-docs/\${userId}-\${Date.now()}.pdf\`</str>;
 <kw>const</kw> { url } = <kw>await</kw> <fn>storagePut</fn>(
-  key,
+  fileKey,
   fileBuffer,
   <str>"application/pdf"</str>
 );
-<cm>// URL pública CDN retornada</cm>`
-      },
-      {
-        title: 'Formatos Suportados (RAG)',
-        type: 'tags',
-        data: ['PDF', 'TXT', 'MD', 'CSV']
-      }
+<cm>// url é pública e permanente</cm>` },
+      { title: 'Configuração', type: 'rows', data: [
+        { key: 'Provider', val: 'AWS S3 (via Manus)' },
+        { key: 'Acesso', val: 'Público (URLs diretas)' },
+        { key: 'Credenciais', val: 'Injetadas pela plataforma' },
+      ]},
     ]
-  }
+  },
 };
 
-// ── RENDER CONNECTIONS ──
-function renderConnections() {
-  const svg = document.getElementById('connections');
-  const canvas = document.getElementById('canvas');
-  const cw = canvas.offsetWidth;
-  const ch = canvas.offsetHeight;
-
-  const getCenter = (id) => {
-    const el = document.getElementById('node-' + id);
-    if (!el) return null;
-    const rect = el.getBoundingClientRect();
-    const canvasRect = canvas.getBoundingClientRect();
-    return {
-      x: rect.left - canvasRect.left + rect.width / 2,
-      y: rect.top - canvasRect.top + rect.height / 2
-    };
-  };
-
-  const connections = [
-    // Core ↔ Frontend
-    { from: 'server', to: 'frontend', color: 'rgba(96,7,193,0.35)', label: 'tRPC', dashed: false },
-    // Core ↔ DB
-    { from: 'server', to: 'db', color: 'rgba(16,185,129,0.4)', label: 'MySQL pool', dashed: false },
-    // Core ↔ Auth
-    { from: 'server', to: 'auth', color: 'rgba(96,7,193,0.35)', label: 'OAuth', dashed: false },
-    // Core ↔ Sync
-    { from: 'server', to: 'sync', color: 'rgba(96,7,193,0.35)', label: '', dashed: false },
-    // Core ↔ AI
-    { from: 'server', to: 'ai', color: 'rgba(245,158,11,0.4)', label: 'Claude', dashed: false },
-    // Core ↔ API v1
-    { from: 'server', to: 'apiv1', color: 'rgba(96,7,193,0.35)', label: 'REST', dashed: false },
-    // Sync ↔ External APIs
-    { from: 'sync', to: 'porti', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
-    { from: 'sync', to: 'motor', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
-    { from: 'sync', to: 'finance', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
-    { from: 'sync', to: 'mdc', color: 'rgba(156,163,175,0.4)', label: '', dashed: true },
-    // API v1 ↔ WhatsApp
-    { from: 'apiv1', to: 'whatsapp', color: 'rgba(156,163,175,0.4)', label: 'Bearer', dashed: true },
-    // AI ↔ Storage
-    { from: 'ai', to: 'storage', color: 'rgba(245,158,11,0.3)', label: 'RAG docs', dashed: true },
-    // DB ↔ Storage (metadata)
-    { from: 'db', to: 'storage', color: 'rgba(16,185,129,0.3)', label: '', dashed: true },
-  ];
-
-  let svgContent = '';
-  connections.forEach(conn => {
-    const from = getCenter(conn.from);
-    const to = getCenter(conn.to);
-    if (!from || !to) return;
-
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
-    const mx = from.x + dx * 0.5;
-    const my = from.y + dy * 0.5;
-
-    // Curved path
-    const cx1 = from.x + dx * 0.3;
-    const cy1 = from.y;
-    const cx2 = to.x - dx * 0.3;
-    const cy2 = to.y;
-
-    const dash = conn.dashed ? 'stroke-dasharray="6,4"' : '';
-    const marker = conn.dashed ? 'marker-end="url(#arrow-gray)"' : 'marker-end="url(#arrow)"';
-
-    svgContent += `<path d="M${from.x},${from.y} C${cx1},${cy1} ${cx2},${cy2} ${to.x},${to.y}" 
-      fill="none" stroke="${conn.color}" stroke-width="1.5" ${dash} ${marker}/>`;
-
-    if (conn.label) {
-      svgContent += `<text x="${mx}" y="${my - 6}" text-anchor="middle" class="conn-label" fill="${conn.color}">${conn.label}</text>`;
-    }
-  });
-
-  svg.innerHTML = svg.innerHTML.split('</defs>')[0] + '</defs>' + svgContent;
+// ────────────────────────────────────────────────
+// RENDER PANEL
+// ────────────────────────────────────────────────
+function renderSection(s) {
+  let html = `<div class="panel-section"><div class="panel-section-title">${s.title}</div>`;
+  if (s.type === 'metrics') {
+    html += `<div class="metric-grid">`;
+    s.data.forEach(m => {
+      html += `<div class="metric-card"><span class="metric-val">${m.val}</span><div class="metric-label">${m.label}</div></div>`;
+    });
+    html += `</div>`;
+  } else if (s.type === 'tags') {
+    html += `<div class="tag-list">`;
+    s.data.forEach(t => { html += `<span class="tag">${t}</span>`; });
+    html += `</div>`;
+  } else if (s.type === 'rows') {
+    s.data.forEach(r => {
+      html += `<div class="info-row"><span class="info-key">${r.key}</span><span class="info-val">${r.val}</span></div>`;
+    });
+  } else if (s.type === 'flow') {
+    s.data.forEach((f, i) => {
+      html += `<div class="flow-step"><div class="flow-num">${i+1}</div><div class="flow-text">${f.text}</div></div>`;
+    });
+  } else if (s.type === 'code') {
+    html += `<div class="code-block">${s.data}</div>`;
+  }
+  html += `</div>`;
+  return html;
 }
 
-// ── SHOW DETAIL ──
-function showDetail(nodeId) {
-  const data = nodes[nodeId];
-  if (!data) return;
+function showDetail(id) {
+  const node = nodes[id];
+  if (!node) return;
 
-  // Hide hint
-  document.getElementById('hint').classList.add('hidden');
-
-  // Update active node
+  // Update active state
   document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
-  document.getElementById('node-' + nodeId)?.classList.add('active');
+  document.getElementById('node-' + id)?.classList.add('active');
 
-  // Update panel header
-  document.getElementById('panelIcon').textContent = data.icon;
-  document.getElementById('panelTitle').textContent = data.title;
-  document.getElementById('panelSubtitle').textContent = data.subtitle;
-
-  // Render sections
-  let html = '';
-  data.sections.forEach(section => {
-    html += `<div class="panel-section">`;
-    html += `<div class="panel-section-title">${section.title}</div>`;
-
-    if (section.type === 'metrics') {
-      html += `<div class="metric-grid">`;
-      section.data.forEach(m => {
-        html += `<div class="metric-card"><span class="metric-val">${m.val}</span><div class="metric-label">${m.label}</div></div>`;
-      });
-      html += `</div>`;
-    }
-
-    else if (section.type === 'tags') {
-      html += `<div class="tag-list">`;
-      section.data.forEach(t => {
-        const cls = t.startsWith('http') ? 'blue' : '';
-        html += `<span class="tag ${cls}">${t}</span>`;
-      });
-      html += `</div>`;
-    }
-
-    else if (section.type === 'rows') {
-      section.data.forEach(row => {
-        html += `<div class="info-row"><span class="info-key">${row.key}</span><span class="info-val">${row.val}</span></div>`;
-      });
-    }
-
-    else if (section.type === 'code') {
-      const formatted = section.data
-        .replace(/<kw>/g, '<span class="kw">').replace(/<\/kw>/g, '</span>')
-        .replace(/<str>/g, '<span class="str">').replace(/<\/str>/g, '</span>')
-        .replace(/<fn>/g, '<span class="fn">').replace(/<\/fn>/g, '</span>')
-        .replace(/<cm>/g, '<span class="cm">').replace(/<\/cm>/g, '</span>');
-      html += `<div class="code-block">${formatted}</div>`;
-    }
-
-    else if (section.type === 'flow') {
-      section.data.forEach(step => {
-        html += `<div class="flow-step"><div class="flow-num">${step.num}</div><div class="flow-text">${step.text}</div></div>`;
-      });
-    }
-
-    html += `</div>`;
-  });
-
-  document.getElementById('panelBody').innerHTML = html;
+  // Populate panel
+  document.getElementById('panelIcon').textContent = node.icon;
+  document.getElementById('panelTitle').textContent = node.title;
+  document.getElementById('panelSubtitle').textContent = node.subtitle;
+  document.getElementById('panelBody').innerHTML = node.sections.map(renderSection).join('');
 
   // Open panel
   document.getElementById('detailPanel').classList.add('open');
-
-  // Re-render connections after panel opens
-  setTimeout(renderConnections, 320);
 }
 
 function closePanel() {
   document.getElementById('detailPanel').classList.remove('open');
   document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
-  setTimeout(renderConnections, 320);
 }
 
-// ── INIT ──
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
 window.addEventListener('load', () => {
-  setTimeout(renderConnections, 100);
+  layoutNodes();
 });
-window.addEventListener('resize', renderConnections);
+window.addEventListener('resize', () => {
+  layoutNodes();
+});
 </script>
 </body>
 </html>
